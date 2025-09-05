@@ -1,0 +1,7 @@
+# FastAPI + SQLModel stack
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+sqlmodel==0.0.22
+psycopg2-binary==2.9.9
+pydantic-settings==2.4.0
+python-multipart==0.0.9
