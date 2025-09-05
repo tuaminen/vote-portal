@@ -135,9 +135,11 @@ export class AppComponent {
     { id: 5, url: '/images/savefile.png', title: 'Kuva 4' },
     { id: 6, url: '/images/karaoke.png', title: 'Karaoke' },
     { id: 7, url: '/images/counterstrike.png', title: 'Counter-Strike' },
-    { id: 8, url: '/images/ikuriarcade.png', title: 'Ikuri Arcade' }
-
-
+    { id: 8, url: '/images/ikuriarcade.png', title: 'Ikuri Arcade' },
+    { id: 9, url: '/images/pubcrawl.png', title: 'Pub Crawl' },
+    { id: 10, url: '/images/pinball_union.png', title: 'Pinball Union' },
+    { id: 11, url: '/images/pub_quiz.png', title: 'Pub Quiz' },
+    { id: 12, url: '/images/zbase.png', title: 'ZBase' }
   ];
 
   scale: Vote[] = [-5,-4,-3,-2,-1,0,1,2,3,4,5];
