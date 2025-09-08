@@ -1,4 +1,3 @@
-
 // app.component.ts — Standalone Angular + Bootstrap mockup (backend-integraatio)
 // -----------------------------------------------------------------------
 // Nyt kuvat ja metatiedot haetaan FastAPI-backendistä:
@@ -20,6 +19,7 @@ type Vote = -5 | -4 | -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4 | 5;
 
 interface ItemMeta { id: number; description: string; }
 interface VoteIn { item_id: number; score: Vote; }
+interface ResultItem { item_id: number; voters: number; score: number; average: number; pos: number; neg: number; rank: number; }
 
 const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
@@ -53,9 +53,14 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     <ng-container *ngIf="!finished && !loading && !error && current">
       <div class="card shadow-lg vote-card mt-2">
         <img [src]="imageUrl(current.id)" class="card-img-top" [alt]="current.description" loading="eager"/>
+        <!-- UUSI: description kuvan alla -->
       </div>
 
       <!-- Score buttons -5..0..+5 -->
+      <div class="card-body bg-transparent text-center py-3">
+        <div class="fs-4 fw-semibold text-white-90">{{ current.description }}</div>
+      </div>
+
       <div class="mt-4 d-flex justify-content-center">
         <div class="btn-group btn-group-lg flex-wrap gap-2">
           <button *ngFor="let v of scale" (click)="selectScore(v)"
@@ -89,18 +94,67 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     </ng-container>
 
     <!-- Finished -->
-    <div *ngIf="finished && !loading && !error" class="text-center">
-      <div class="display-5 mb-2">Kiitos, {{ nickname }}!</div>
-      <div class="fs-4 mb-4">Äänestys valmis.</div>
-      <div class="d-flex justify-content-center gap-3 flex-wrap">
-        <button class="btn btn-success btn-lg" (click)="sendVotes()" [disabled]="sending">
-          <i class="bi bi-upload me-2"></i> Lähetä palvelimelle
-        </button>
-        <button class="btn btn-outline-light btn-lg" (click)="reset()">
-          <i class="bi bi-arrow-counterclockwise me-2"></i> Uudestaan
-        </button>
+    <div *ngIf="finished && !loading && !error" class="container py-4">
+      <div class="text-center mb-4" *ngIf="!showResults">
+        <div class="display-5 mb-2">Kiitos, {{ nickname }}!</div>
+        <div class="fs-4 mb-4">Äänestys valmis.</div>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <button class="btn btn-success btn-lg" (click)="sendVotes()" [disabled]="sending">
+            <i class="bi bi-upload me-2"></i> Lähetä palvelimelle
+          </button>
+          <button class="btn btn-outline-light btn-lg" (click)="reset()">
+            <i class="bi bi-arrow-counterclockwise me-2"></i> Uudestaan
+          </button>
+        </div>
+        <div class="mt-3" *ngIf="sendResult" [class]="sendOk ? 'text-success' : 'text-warning'">{{ sendResult }}</div>
       </div>
-      <div class="mt-3" *ngIf="sendResult" [class]="sendOk ? 'text-success' : 'text-warning'">{{ sendResult }}</div>
+
+      <!-- Tulossivu -->
+      <div *ngIf="showResults">
+        <div class="d-flex align-items-end justify-content-between mb-3 flex-wrap gap-3">
+          <div>
+            <div class="display-6">Tulokset</div>
+            <div class="text-white-50">Järjestetty korkeimmasta scoresta alaspäin</div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-light" (click)="reloadResults()"><i class="bi bi-arrow-clockwise me-2"></i>Päivitä</button>
+            <button class="btn btn-outline-light" (click)="reset()"><i class="bi bi-arrow-counterclockwise me-2"></i>Uudestaan</button>
+          </div>
+        </div>
+
+        <div class="table-responsive shadow-lg rounded-4 overflow-hidden results-wrap">
+          <table class="table table-dark table-striped table-hover align-middle mb-0 results-table">
+            <thead>
+              <tr class="text-uppercase small text-white-50">
+                <th class="px-4">#</th>
+                <th>Kuva</th>
+                <th>Kuvaus</th>
+                <th class="text-end">Voters</th>
+                <th class="text-end">Score</th>
+                <th class="text-end">Average</th>
+                <th class="text-end">Pos</th>
+                <th class="text-end">Neg</th>
+                <th class="text-end">Rank</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of results; let i = index">
+                <td class="px-4 fw-bold">{{ i + 1 }}</td>
+                <td style="width: 120px;">
+                  <img [src]="imageUrl(r.item_id)" class="img-thumbnail rounded-3" style="width:110px;height:70px;object-fit:cover;" alt="thumb"/>
+                </td>
+                <td class="fw-semibold">{{ descriptionOf(r.item_id) }}</td>
+                <td class="text-end">{{ r.voters }}</td>
+                <td class="text-end fs-5 fw-bold">{{ r.score }}</td>
+                <td class="text-end">{{ r.average | number:'1.2-2' }}</td>
+                <td class="text-end"><span class="badge bg-success-subtle text-success-emphasis px-3 py-2">{{ r.pos }}</span></td>
+                <td class="text-end"><span class="badge bg-danger-subtle text-danger-emphasis px-3 py-2">{{ r.neg }}</span></td>
+                <td class="text-end"><span class="badge bg-warning text-dark px-3 py-2">{{ r.rank | number:'1.3-3' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- Nickname overlay -->
@@ -126,6 +180,11 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     .nick-card { width: min(480px, 90vw); }
     .progress { background: rgba(255,255,255,.25); }
     .progress-bar { background: #ffc107; }
+    /* Tulostaulukon visuaalinen ilme */
+    .results-wrap { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+    .results-table thead { backdrop-filter: blur(4px); }
+    .results-table tbody tr { transition: transform .06s ease; }
+    .results-table tbody tr:hover { transform: scale(1.01); }
   `]
 })
 export class AppComponent implements OnInit {
@@ -145,6 +204,10 @@ export class AppComponent implements OnInit {
   sending = false;
   sendResult: string | null = null;
   sendOk = false;
+
+  // Tulossivun tila
+  showResults = false;
+  results: ResultItem[] = [];
 
   ngOnInit() {
     this.fetchItems();
@@ -192,6 +255,7 @@ export class AppComponent implements OnInit {
 
   reset() {
     this.currentIndex = 0; this.currentScore = null; this.votes = {}; this.finished = false; this.sendResult = null; this.sendOk = false;
+    this.showResults = false; this.results = [];
   }
 
   sendVotes() {
@@ -202,22 +266,44 @@ export class AppComponent implements OnInit {
     };
     this.sending = true; this.sendResult = null; this.sendOk = false;
     this.http.post(`${API_BASE}/votes`, payload, { observe: 'response' }).subscribe({
-      next: (res) => { this.sending = false; this.sendOk = res.status >= 200 && res.status < 300; this.sendResult = this.sendOk ? 'Äänet lähetetty' : `Virhe: ${res.status}`; },
+      next: (res) => {
+        this.sending = false;
+        this.sendOk = res.status >= 200 && res.status < 300;
+        this.sendResult = this.sendOk ? 'Äänet lähetetty' : `Virhe: ${res.status}`;
+        if (this.sendOk) { this.loadResults(); }
+      },
       error: (err) => { this.sending = false; this.sendOk = false; this.sendResult = err?.error?.detail || 'Lähetys epäonnistui'; }
     });
   }
+
+  loadResults() {
+    this.showResults = true;
+    this.http.get<ResultItem[]>(`${API_BASE}/results`).subscribe({
+      next: (res) => {
+        const byScoreDesc = [...(res ?? [])].sort((a,b) => b.score - a.score);
+        this.results = byScoreDesc;
+      },
+      error: () => { /* jätetään taulukko tyhjäksi, headerit näkyy */ }
+    });
+  }
+
+  reloadResults() { this.loadResults(); }
+
+  descriptionOf(id: number) { return this.items.find(i => i.id === id)?.description || ''; }
 
   // Pikanäppäimet: ←/→ säätävät arvoa, Enter = seuraava, Esc = nollaa valinnan
   @HostListener('document:keydown', ['$event'])
   handleKey(e: KeyboardEvent) {
     if (this.nicknameEditing) return;
-    if (this.finished) {
+    if (this.finished && !this.showResults) {
       if (e.key === 'Enter') { this.reset(); e.preventDefault(); }
       return;
     }
-    if (e.key === 'ArrowLeft') { this.bump(-1); e.preventDefault(); }
-    if (e.key === 'ArrowRight') { this.bump(1); e.preventDefault(); }
-    if (e.key === 'Enter') { this.submitOne(); e.preventDefault(); }
-    if (e.key === 'Escape') { this.currentScore = null; e.preventDefault(); }
+    if (!this.finished) {
+      if (e.key === 'ArrowLeft') { this.bump(-1); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { this.bump(1); e.preventDefault(); }
+      if (e.key === 'Enter') { this.submitOne(); e.preventDefault(); }
+      if (e.key === 'Escape') { this.currentScore = null; e.preventDefault(); }
+    }
   }
 }
