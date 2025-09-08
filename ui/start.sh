@@ -1,3 +1,3 @@
-ng serve
+#ng serve
 
-
+docker compose up --build
