@@ -147,3 +147,15 @@ def get_results():
 def get_results_ranked():
     data = get_results()
     return sorted(data, key=lambda x: x.rank, reverse=True)
+
+@app.delete("/items/{item_id}", status_code=204)
+def delete_item(item_id: int):
+    with get_session() as session:
+        item = session.get(Item, item_id)
+        if not item:
+            raise HTTPException(status_code=404, detail="Item not found")
+        # Poista ensin itemiin liittyvät äänet, jotta ei tule FK-virhettä
+        session.exec(delete(Vote).where(Vote.item_id == item_id))
+        session.delete(item)
+        session.commit()
+        return Response(status_code=204)
