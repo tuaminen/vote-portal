@@ -4,12 +4,12 @@ from __future__ import annotations
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import select
-from sqlalchemy import func, delete
+from sqlalchemy import func, delete, case
 from .db import init_db, get_session
 from .models import Item, Vote
 from .schemas import ItemMeta, ItemCreated, VoteBatchIn, ResultItem
 
-app = FastAPI(title="Vote API", version="1.0.0")
+app = FastAPI(title="Vote API", version="1.1.0")
 
 # CORS (tarkenna origin devissä)
 app.add_middleware(
@@ -88,21 +88,62 @@ def submit_votes(payload: VoteBatchIn):
         return Response(status_code=204)
 
 
-# -------- Results --------
+def _compute_rank(voters: int, score_sum: int, pos: int, neg: int) -> float:
+    """
+    Engagement-painotettu ranking 0..1 (iso parempi):
+    - Wilsonin alaraja positiivisten osuudelle (pos/(pos+neg)), z=1.96
+    - Yhdistetään normalized averageen (avg∈[-5,5] → 0..1)
+    - Painotetaan osallistujamäärällä w = n / (n + k), k=10
+    """
+    n_votes = max(pos + neg, 0)
+    if n_votes == 0:
+        L = 0.0
+    else:
+        z = 1.96
+        p = pos / n_votes
+        denom = 1 + z*z / n_votes
+        centre = p + z*z/(2*n_votes)
+        margin = z * ((p*(1-p)/n_votes + z*z/(4*n_votes*n_votes)) ** 0.5)
+        L = (centre - margin) / denom
+        if L < 0:
+            L = 0.0
+
+    avg = (score_sum / voters) if voters else 0.0
+    norm_avg = (avg + 5.0) / 10.0  # map -5..5 → 0..1
+    k = 10.0
+    w = voters / (voters + k)
+    alpha = 0.6  # paino Wilsonille vs. keskiarvolle
+    rank = (alpha * L + (1 - alpha) * norm_avg) * w
+    return float(round(rank, 6))
+
 @app.get("/results", response_model=list[ResultItem])
 def get_results():
-    """Palauttaa item-kohtaisen äänimäärän (count)."""
     with get_session() as session:
         rows = session.exec(
-            select(Vote.item_id, func.count(Vote.id)).group_by(Vote.item_id)
+            select(
+                Vote.item_id,
+                func.count(Vote.id).label("voters"),
+                func.coalesce(func.sum(Vote.score), 0).label("score"),
+                func.coalesce(func.sum(case((Vote.score > 0, 1), else_=0)), 0).label("pos"),
+                func.coalesce(func.sum(case((Vote.score < 0, 1), else_=0)), 0).label("neg"),
+            ).group_by(Vote.item_id)
         ).all()
-        return [ResultItem(item_id=row[0], count=row[1]) for row in rows]
+        result: list[ResultItem] = []
+        for item_id, voters, score_sum, pos, neg in rows:
+            avg = (score_sum / voters) if voters else 0.0
+            rank = _compute_rank(int(voters), int(score_sum), int(pos), int(neg))
+            result.append(ResultItem(
+                item_id=int(item_id),
+                voters=int(voters),
+                score=int(score_sum),
+                average=float(round(avg, 6)),
+                pos=int(pos),
+                neg=int(neg),
+                rank=rank,
+            ))
+        return result
 
-
-@app.get("/results/{item_id}", response_model=ResultItem)
-def get_item_result(item_id: int):
-    with get_session() as session:
-        count = session.exec(
-            select(func.count(Vote.id)).where(Vote.item_id == item_id)
-        ).one()
-        return ResultItem(item_id=item_id, count=count)
+@app.get("/results/ranked", response_model=list[ResultItem])
+def get_results_ranked():
+    data = get_results()
+    return sorted(data, key=lambda x: x.rank, reverse=True)

@@ -29,9 +29,11 @@ class ResultCount(BaseModel):
     item_id: int
     count: int
 
-
 class ResultItem(BaseModel):
     item_id: int
-    count: int
-    # Optional extras
-    # avg: float | None = None
+    voters: int              # montako käyttäjää on äänestänyt
+    score: int               # pisteiden summa (−5..5 per käyttäjä)
+    average: float           # keskiarvo (−5..5)
+    pos: int                 # positiivisten äänien määrä (score > 0)
+    neg: int                 # negatiivisten äänien määrä (score < 0)
+    rank: float              # engagement-painotettu piste (0..1), iso parempi
