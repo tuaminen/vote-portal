@@ -17,6 +17,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 type Vote = -5 | -4 | -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4 | 5;
 
+interface TopicOut { title: string; }
 interface ItemMeta { id: number; description: string; }
 interface VoteIn { item_id: number; score: Vote; }
 interface ResultItem { item_id: number; voters: number; score: number; average: number; pos: number; neg: number; rank: number; }
@@ -31,7 +32,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
   <!-- Landing page -->
   <div *ngIf="showLanding" class="landing d-flex flex-column justify-content-center align-items-center text-light text-center">
-    <h1 class="display-1 fw-bold mb-4">TestiOtsikko 24.10.2025</h1>
+    <h1 class="display-1 fw-bold mb-4">{{ landingTitle }}</h1>
     <button class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow-lg" (click)="startVoting()">
       Let's vote!
     </button>
@@ -215,7 +216,9 @@ export class AppComponent implements OnInit {
 
   nickname: string = localStorage.getItem('nickname') ?? '';
   nicknameEditing = !this.nickname;
+
   showLanding = true;
+  landingTitle = '...';   // oletus, jos backend ei vastaa
 
   items: ItemMeta[] = [];
   scale: Vote[] = [-5,-4,-3,-2,-1,0,1,2,3,4,5];
@@ -233,13 +236,20 @@ export class AppComponent implements OnInit {
   showResults = false;
   results: ResultItem[] = [];
 
-  ngOnInit() {
-    this.fetchItems();
-  }
+ngOnInit() {
+  this.getTopic();
+}
 
   imageUrl(id: number) { return `${API_BASE}/items/${id}/image`; }
 
   get current(): ItemMeta | null { return this.items[this.currentIndex] ?? null; }
+
+  getTopic() {
+    this.http.get<{ title: string }>(`${API_BASE}/topic`).subscribe({
+      next: t => this.landingTitle = t.title,
+      error: () => this.landingTitle = 'TestiOtsikko 24.10.2025'
+    });
+  }
 
   fetchItems() {
     this.loading = true; this.error = null; this.finished = false; this.currentIndex = 0; this.currentScore = null; this.votes = {};
