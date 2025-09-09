@@ -77,20 +77,16 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
         </div>
       </div>
 
-      <!-- Primary actions -->
-      <div class="mt-4 d-flex align-items-center gap-3">
-        <button class="btn btn-outline-light btn-lg rounded-circle p-4 action-circle" (click)="bump(-1)" aria-label="-1">
-          <i class="bi bi-hand-thumbs-down"></i>
+      <!-- Navigation arrows -->
+      <div class="mt-5 d-flex align-items-center gap-3 nav-arrows">
+        <button class="btn fw-bold score-pill btn-secondary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
+          <i class="bi bi-arrow-left me-2"></i> Edellinen
         </button>
-        <button class="btn btn-primary btn-lg px-5 py-3" [disabled]="currentScore === null" (click)="submitOne()">
-          <i class="bi bi-arrow-right-circle me-2"></i> Seuraava
-        </button>
-        <button class="btn btn-outline-light btn-lg rounded-circle p-4 action-circle" (click)="bump(1)" aria-label="+1">
-          <i class="bi bi-hand-thumbs-up"></i>
+        <button class="btn fw-bold score-pill btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
+          Seuraava <i class="bi bi-arrow-right ms-2"></i>
         </button>
       </div>
 
-      <div class="mt-3 text-white-50 small">Vinkki: ←/→ säätää, Enter jatkaa</div>
     </ng-container>
 
     <!-- Finished -->
@@ -173,9 +169,19 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     :host { display:block; min-height:100vh; background: #000; }
     .vote-card { width: min(900px, 92vw); height: min(70vh, 720px); border-radius: 2rem; overflow: hidden; background: rgba(255,255,255,.08); backdrop-filter: blur(6px); }
     .vote-card img { width: 100%; height: 100%; object-fit: contain; background: rgba(0,0,0,.15); }
+    .nav-arrows { margin-bottom: 3rem; }
     .score-pill { border-width: 2px; border-radius: 999px; padding: .6rem 1rem; }
-    .score-pill.active { box-shadow: 0 0 0 .25rem rgba(255,255,255,.25) inset; }
-    .action-circle { width: 4rem; height: 4rem; display:flex; align-items:center; justify-content:center; }
+    .score-pill.active {
+      box-shadow: 0 0 0 .3rem rgba(255,255,255,.5) inset,
+                  0 0 10px rgba(255,255,255,.8); /* kirkas korostus */
+      transform: scale(1.15);                    /* suurennus */
+      font-weight: 900;                          /* vahvempi fontti */
+    }
+    //.score-pill:hover { filter: brightness(1.1); }    .action-circle { width: 4rem; height: 4rem; display:flex; align-items:center; justify-content:center; }
+    .score-pill:hover {
+      transform: scale(1.15);
+      opacity: 0.5;
+    }
     .nickname-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; z-index: 1000; }
     .nick-card { width: min(480px, 90vw); }
     .progress { background: rgba(255,255,255,.25); }
@@ -220,7 +226,7 @@ export class AppComponent implements OnInit {
   fetchItems() {
     this.loading = true; this.error = null; this.finished = false; this.currentIndex = 0; this.currentScore = null; this.votes = {};
     this.http.get<ItemMeta[]>(`${API_BASE}/items`).subscribe({
-      next: (res) => { this.items = res ?? []; this.loading = false; },
+      next: (res) => { this.items = res ?? []; this.loading = false; this.syncCurrentScore(); },
       error: (err) => { this.error = err?.error?.detail || 'Ei saada yhteyttä API:in'; this.loading = false; }
     });
   }
@@ -242,13 +248,32 @@ export class AppComponent implements OnInit {
     if (s > 5) s = 5; if (s < -5) s = -5; this.currentScore = s as Vote;
   }
 
-  submitOne() {
-    if (!this.current || this.currentScore === null) return;
-    this.votes[this.current.id] = this.currentScore;
-    this.currentScore = null;
+  private syncCurrentScore() {
+    const cur = this.current;
+    this.currentScore = cur ? (this.votes[cur.id] ?? null) : null;
+  }
+
+  goPrev() {
+    // Tallenna mahdollinen valinta nykyiselle itemille
+    if (this.current && this.currentScore !== null) {
+      this.votes[this.current.id] = this.currentScore;
+    }
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.syncCurrentScore(); // näytä aiemmin annettu arvo (jos on)
+    }
+  }
+
+  goNext() {
+    // Tallenna mahdollinen valinta nykyiselle itemille
+    if (this.current && this.currentScore !== null) {
+      this.votes[this.current.id] = this.currentScore;
+    }
     if (this.currentIndex < this.items.length - 1) {
       this.currentIndex++;
+      this.syncCurrentScore(); // näytä aiemmin annettu arvo (jos on)
     } else {
+      // viimeisen jälkeen siirrytään valmiiksi-näkymään
       this.finished = true;
     }
   }
@@ -302,7 +327,6 @@ export class AppComponent implements OnInit {
     if (!this.finished) {
       if (e.key === 'ArrowLeft') { this.bump(-1); e.preventDefault(); }
       if (e.key === 'ArrowRight') { this.bump(1); e.preventDefault(); }
-      if (e.key === 'Enter') { this.submitOne(); e.preventDefault(); }
       if (e.key === 'Escape') { this.currentScore = null; e.preventDefault(); }
     }
   }
