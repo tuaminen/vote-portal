@@ -28,144 +28,162 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule],
   template: `
-  <div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
-    <!-- Header / Progress -->
-    <div class="container-fluid px-4 pt-3 w-100" *ngIf="!finished">
-      <div class="d-flex align-items-center gap-3">
-        <div class="fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
-        <div class="progress flex-grow-1" style="height:12px;">
-          <div class="progress-bar" role="progressbar" [style.width.%]="items.length ? (currentIndex / items.length) * 100 : 0"></div>
-        </div>
-        <div class="fs-5">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
-      </div>
-    </div>
 
-    <!-- Loading / Error states -->
-    <div class="text-center mt-5" *ngIf="loading">
-      <div class="display-6">Ladataan…</div>
-    </div>
-    <div class="text-center mt-5" *ngIf="error">
-      <div class="fs-4">Virhe: {{ error }}</div>
-      <button class="btn btn-outline-light mt-3" (click)="reload()"><i class="bi bi-arrow-clockwise me-2"></i>Yritä uudelleen</button>
-    </div>
+  <!-- Landing page -->
+  <div *ngIf="showLanding" class="landing d-flex flex-column justify-content-center align-items-center text-light text-center">
+    <h1 class="display-1 fw-bold mb-4">TestiOtsikko 24.10.2025</h1>
+    <button class="btn btn-lg btn-primary px-5 py-3 rounded-pill shadow-lg" (click)="startVoting()">
+      Let's vote!
+    </button>
+  </div>
 
-    <!-- Voting Card -->
-    <ng-container *ngIf="!finished && !loading && !error && current">
-      <div class="card shadow-lg vote-card mt-2">
-        <img [src]="imageUrl(current.id)" class="card-img-top" [alt]="current.description" loading="eager"/>
-        <!-- UUSI: description kuvan alla -->
-      </div>
+  <!-- Varsinainen äänestys -->
+  <div *ngIf="!showLanding" class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
 
-      <!-- Score buttons -5..0..+5 -->
-      <div class="card-body bg-transparent text-center py-3">
-        <div class="fs-4 fw-semibold text-white-90">{{ current.description }}</div>
-      </div>
-
-      <div class="mt-4 d-flex justify-content-center">
-        <div class="btn-group btn-group-lg flex-wrap gap-2">
-          <button *ngFor="let v of scale" (click)="selectScore(v)"
-                  class="btn fw-bold score-pill"
-                  [ngClass]="{
-                    'btn-danger text-white': v < 0,
-                    'btn-secondary text-white': v === 0,
-                    'btn-success text-white': v > 0,
-                    'active': currentScore === v
-                  }">
-            <i class="bi" [ngClass]="{ 'bi-hand-thumbs-down': v < 0, 'bi-dash': v === 0, 'bi-hand-thumbs-up': v > 0 }"></i>
-            <span class="ms-1">{{ v }}</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Navigation arrows -->
-      <div class="mt-5 d-flex align-items-center gap-3 nav-arrows">
-        <button class="btn fw-bold score-pill btn-secondary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
-          <i class="bi bi-arrow-left me-2"></i> Edellinen
-        </button>
-        <button class="btn fw-bold score-pill btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
-          Seuraava <i class="bi bi-arrow-right ms-2"></i>
-        </button>
-      </div>
-
-    </ng-container>
-
-    <!-- Finished -->
-    <div *ngIf="finished && !loading && !error" class="container py-4">
-      <div class="text-center mb-4" *ngIf="!showResults">
-        <div class="display-5 mb-2">Kiitos, {{ nickname }}!</div>
-        <div class="fs-4 mb-4">Äänestys valmis.</div>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <button class="btn btn-success btn-lg" (click)="sendVotes()" [disabled]="sending">
-            <i class="bi bi-upload me-2"></i> Lähetä palvelimelle
-          </button>
-          <button class="btn btn-outline-light btn-lg" (click)="reset()">
-            <i class="bi bi-arrow-counterclockwise me-2"></i> Uudestaan
-          </button>
-        </div>
-        <div class="mt-3" *ngIf="sendResult" [class]="sendOk ? 'text-success' : 'text-warning'">{{ sendResult }}</div>
-      </div>
-
-      <!-- Tulossivu -->
-      <div *ngIf="showResults">
-        <div class="d-flex align-items-end justify-content-between mb-3 flex-wrap gap-3">
-          <div>
-            <div class="display-6">Tulokset</div>
-            <div class="text-white-50">Järjestetty korkeimmasta scoresta alaspäin</div>
+    <div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
+      <!-- Header / Progress -->
+      <div class="container-fluid px-4 pt-3 w-100" *ngIf="!finished">
+        <div class="d-flex align-items-center gap-3">
+          <div class="fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
+          <div class="progress flex-grow-1" style="height:12px;">
+            <div class="progress-bar" role="progressbar" [style.width.%]="items.length ? (currentIndex / items.length) * 100 : 0"></div>
           </div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-light" (click)="reloadResults()"><i class="bi bi-arrow-clockwise me-2"></i>Päivitä</button>
-            <button class="btn btn-outline-light" (click)="reset()"><i class="bi bi-arrow-counterclockwise me-2"></i>Uudestaan</button>
+          <div class="fs-5">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
+        </div>
+      </div>
+
+      <!-- Loading / Error states -->
+      <div class="text-center mt-5" *ngIf="loading">
+        <div class="display-6">Ladataan…</div>
+      </div>
+      <div class="text-center mt-5" *ngIf="error">
+        <div class="fs-4">Virhe: {{ error }}</div>
+        <button class="btn btn-outline-light mt-3" (click)="reload()"><i class="bi bi-arrow-clockwise me-2"></i>Yritä uudelleen</button>
+      </div>
+
+      <!-- Voting Card -->
+      <ng-container *ngIf="!finished && !loading && !error && current">
+        <div class="card shadow-lg vote-card mt-2">
+          <img [src]="imageUrl(current.id)" class="card-img-top" [alt]="current.description" loading="eager"/>
+          <!-- UUSI: description kuvan alla -->
+        </div>
+
+        <!-- Score buttons -5..0..+5 -->
+        <div class="card-body bg-transparent text-center py-3">
+          <div class="fs-4 fw-semibold text-white-90">{{ current.description }}</div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-center">
+          <div class="btn-group btn-group-lg flex-wrap gap-2">
+            <button *ngFor="let v of scale" (click)="selectScore(v)"
+                    class="btn fw-bold score-pill"
+                    [ngClass]="{
+                      'btn-danger text-white': v < 0,
+                      'btn-secondary text-white': v === 0,
+                      'btn-success text-white': v > 0,
+                      'active': currentScore === v
+                    }">
+              <i class="bi" [ngClass]="{ 'bi-hand-thumbs-down': v < 0, 'bi-dash': v === 0, 'bi-hand-thumbs-up': v > 0 }"></i>
+              <span class="ms-1">{{ v }}</span>
+            </button>
           </div>
         </div>
 
-        <div class="table-responsive shadow-lg rounded-4 overflow-hidden results-wrap">
-          <table class="table table-dark table-striped table-hover align-middle mb-0 results-table">
-            <thead>
-              <tr class="text-uppercase small text-white-50">
-                <th class="px-4">#</th>
-                <th>Kuva</th>
-                <th>Kuvaus</th>
-                <th class="text-end">Voters</th>
-                <th class="text-end">Score</th>
-                <th class="text-end">Average</th>
-                <th class="text-end">Pos</th>
-                <th class="text-end">Neg</th>
-                <th class="text-end">Rank</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let r of results; let i = index">
-                <td class="px-4 fw-bold">{{ i + 1 }}</td>
-                <td style="width: 120px;">
-                  <img [src]="imageUrl(r.item_id)" class="img-thumbnail rounded-3" style="width:110px;height:70px;object-fit:cover;" alt="thumb"/>
-                </td>
-                <td class="fw-semibold">{{ descriptionOf(r.item_id) }}</td>
-                <td class="text-end">{{ r.voters }}</td>
-                <td class="text-end fs-5 fw-bold">{{ r.score }}</td>
-                <td class="text-end">{{ r.average | number:'1.2-2' }}</td>
-                <td class="text-end"><span class="badge bg-success-subtle text-success-emphasis px-3 py-2">{{ r.pos }}</span></td>
-                <td class="text-end"><span class="badge bg-danger-subtle text-danger-emphasis px-3 py-2">{{ r.neg }}</span></td>
-                <td class="text-end"><span class="badge bg-warning text-dark px-3 py-2">{{ r.rank | number:'1.3-3' }}</span></td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Navigation arrows -->
+        <div class="mt-5 d-flex align-items-center gap-3 nav-arrows">
+          <button class="btn fw-bold score-pill btn-secondary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
+            <i class="bi bi-arrow-left me-2"></i> Edellinen
+          </button>
+          <button class="btn fw-bold score-pill btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
+            Seuraava <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+
+      </ng-container>
+
+      <!-- Finished -->
+      <div *ngIf="finished && !loading && !error" class="container py-4">
+        <div class="text-center mb-4" *ngIf="!showResults">
+          <div class="display-5 mb-2">Kiitos, {{ nickname }}!</div>
+          <div class="fs-4 mb-4">Äänestys valmis.</div>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button class="btn btn-success btn-lg" (click)="sendVotes()" [disabled]="sending">
+              <i class="bi bi-upload me-2"></i> Lähetä palvelimelle
+            </button>
+            <button class="btn btn-outline-light btn-lg" (click)="reset()">
+              <i class="bi bi-arrow-counterclockwise me-2"></i> Uudestaan
+            </button>
+          </div>
+          <div class="mt-3" *ngIf="sendResult" [class]="sendOk ? 'text-success' : 'text-warning'">{{ sendResult }}</div>
+        </div>
+
+        <!-- Tulossivu -->
+        <div *ngIf="showResults">
+          <div class="d-flex align-items-end justify-content-between mb-3 flex-wrap gap-3">
+            <div>
+              <div class="display-6">Tulokset</div>
+              <div class="text-white-50">Järjestetty korkeimmasta scoresta alaspäin</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-light" (click)="reloadResults()"><i class="bi bi-arrow-clockwise me-2"></i>Päivitä</button>
+              <button class="btn btn-outline-light" (click)="reset()"><i class="bi bi-arrow-counterclockwise me-2"></i>Uudestaan</button>
+            </div>
+          </div>
+
+          <div class="table-responsive shadow-lg rounded-4 overflow-hidden results-wrap">
+            <table class="table table-dark table-striped table-hover align-middle mb-0 results-table">
+              <thead>
+                <tr class="text-uppercase small text-white-50">
+                  <th class="px-4">#</th>
+                  <th>Kuva</th>
+                  <th>Kuvaus</th>
+                  <th class="text-end">Voters</th>
+                  <th class="text-end">Score</th>
+                  <th class="text-end">Average</th>
+                  <th class="text-end">Pos</th>
+                  <th class="text-end">Neg</th>
+                  <th class="text-end">Rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of results; let i = index">
+                  <td class="px-4 fw-bold">{{ i + 1 }}</td>
+                  <td style="width: 120px;">
+                    <img [src]="imageUrl(r.item_id)" class="img-thumbnail rounded-3" style="width:110px;height:70px;object-fit:cover;" alt="thumb"/>
+                  </td>
+                  <td class="fw-semibold">{{ descriptionOf(r.item_id) }}</td>
+                  <td class="text-end">{{ r.voters }}</td>
+                  <td class="text-end fs-5 fw-bold">{{ r.score }}</td>
+                  <td class="text-end">{{ r.average | number:'1.2-2' }}</td>
+                  <td class="text-end"><span class="badge bg-success-subtle text-success-emphasis px-3 py-2">{{ r.pos }}</span></td>
+                  <td class="text-end"><span class="badge bg-danger-subtle text-danger-emphasis px-3 py-2">{{ r.neg }}</span></td>
+                  <td class="text-end"><span class="badge bg-warning text-dark px-3 py-2">{{ r.rank | number:'1.3-3' }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Nickname overlay -->
-    <div *ngIf="nicknameEditing" class="nickname-overlay">
-      <div class="nick-card p-4 rounded-4 shadow-lg bg-white text-dark">
-        <div class="fs-2 mb-3 text-center">Nimimerkki</div>
-        <input class="form-control form-control-lg text-center" [(ngModel)]="nickname" placeholder="kirjoita nimimerkki…" (keyup.enter)="saveNickname()"/>
-        <button class="btn btn-dark btn-lg w-100 mt-3" (click)="saveNickname()">
-          <i class="bi bi-check2-circle me-2"></i>Aloita
-        </button>
+      <!-- Nickname overlay -->
+      <div *ngIf="nicknameEditing" class="nickname-overlay">
+        <div class="nick-card p-4 rounded-4 shadow-lg bg-white text-dark">
+          <div class="fs-2 mb-3 text-center">Nimimerkki</div>
+          <input class="form-control form-control-lg text-center" [(ngModel)]="nickname" placeholder="kirjoita nimimerkki…" (keyup.enter)="saveNickname()"/>
+          <button class="btn btn-dark btn-lg w-100 mt-3" (click)="saveNickname()">
+            <i class="bi bi-check2-circle me-2"></i>Aloita
+          </button>
+        </div>
       </div>
     </div>
   </div>
+
   `,
   styles: [`
+    .landing {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    }
     :host { display:block; min-height:100vh; background: #000; }
     .vote-card { width: min(900px, 92vw); height: min(70vh, 720px); border-radius: 2rem; overflow: hidden; background: rgba(255,255,255,.08); backdrop-filter: blur(6px); }
     .vote-card img { width: 100%; height: 100%; object-fit: contain; background: rgba(0,0,0,.15); }
@@ -177,7 +195,6 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
       transform: scale(1.15);                    /* suurennus */
       font-weight: 900;                          /* vahvempi fontti */
     }
-    //.score-pill:hover { filter: brightness(1.1); }    .action-circle { width: 4rem; height: 4rem; display:flex; align-items:center; justify-content:center; }
     .score-pill:hover {
       transform: scale(1.15);
       opacity: 0.5;
@@ -198,6 +215,7 @@ export class AppComponent implements OnInit {
 
   nickname: string = localStorage.getItem('nickname') ?? '';
   nicknameEditing = !this.nickname;
+  showLanding = true;
 
   items: ItemMeta[] = [];
   scale: Vote[] = [-5,-4,-3,-2,-1,0,1,2,3,4,5];
@@ -242,6 +260,11 @@ export class AppComponent implements OnInit {
   }
 
   selectScore(v: Vote) { this.currentScore = v; }
+
+  startVoting() {
+    this.showLanding = false;
+    this.fetchItems();
+  }
 
   bump(delta: -1 | 1) {
     let s = (this.currentScore ?? 0) + delta as number;
