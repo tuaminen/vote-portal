@@ -14,6 +14,8 @@ class ItemMeta(BaseModel):
 class ItemCreated(BaseModel):
     id: int
 
+class TopicOut(BaseModel):
+    title: str
 
 class VoteIn(BaseModel):
     item_id: int

@@ -7,9 +7,13 @@ from sqlmodel import select
 from sqlalchemy import func, delete, case
 from .db import init_db, get_session
 from .models import Item, Vote
-from .schemas import ItemMeta, ItemCreated, VoteBatchIn, ResultItem
+from .schemas import TopicOut, ItemMeta, ItemCreated, VoteBatchIn, ResultItem
+import os
+
 
 app = FastAPI(title="Vote API", version="1.1.0")
+
+TOPIC_TITLE = os.getenv("TOPIC_TITLE", "TestiOtsikko 24.10.2025")
 
 # CORS (tarkenna origin devissä)
 app.add_middleware(
@@ -24,6 +28,12 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     init_db()
+
+
+# -------- Topic --------
+@app.get("/topic", response_model=TopicOut)
+def get_topic():
+    return TopicOut(title=TOPIC_TITLE)
 
 
 # -------- Items --------
@@ -60,7 +70,6 @@ def get_item_image(item_id: int):
         if not item:
             raise HTTPException(status_code=404, detail="Item not found")
         return Response(content=item.image_bytes, media_type=item.image_mime)
-
 
 # -------- Votes --------
 @app.post("/votes", status_code=204)
