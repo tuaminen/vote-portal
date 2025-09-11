@@ -37,6 +37,17 @@ def get_topic():
 
 
 # -------- Items --------
+
+@app.delete("/items", status_code=204)
+def delete_all_items():
+    with get_session() as session:
+        # Poista ensin kaikki äänet (FK-viittaukset)
+        session.exec(delete(Vote))
+        # Poista sitten kaikki itemit
+        session.exec(delete(Item))
+        session.commit()
+        return Response(status_code=204)
+
 @app.post("/items", response_model=ItemCreated, status_code=201)
 async def create_item(
     description: str = Form(...),
