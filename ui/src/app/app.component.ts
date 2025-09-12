@@ -71,7 +71,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
         <!-- Score buttons -5..0..+5 -->
         <div class="card-body bg-transparent text-center py-3">
-          <div class="fs-4 fw-semibold text-white-90">{{ current.description }}</div>
+          <div class="fs-4 fw-semibold text-white-90 desc" [innerHTML]="linkifyHtml(current.description)"></div>
         </div>
 
         <div class="mt-4 d-flex justify-content-center">
@@ -152,7 +152,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
                   <td style="width: 120px;">
                     <img [src]="imageUrl(r.item_id)" class="img-thumbnail rounded-3" style="width:110px;height:70px;object-fit:cover;" alt="thumb"/>
                   </td>
-                  <td class="fw-semibold">{{ descriptionOf(r.item_id) }}</td>
+                  <td class="fw-semibold desc" [innerHTML]="linkifyHtml(descriptionOf(r.item_id))"></td>
                   <td class="text-end">{{ r.voters }}</td>
                   <td class="text-end fs-5 fw-bold">{{ r.score }}</td>
                   <td class="text-end">{{ r.average | number:'1.2-2' }}</td>
@@ -200,6 +200,8 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
       transform: scale(1.15);
       opacity: 0.5;
     }
+    .desc a { color: #61dafb; text-decoration: underline; }
+    .desc a:hover { text-decoration: none; filter: brightness(1.1); }
     .nickname-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; z-index: 1000; }
     .nick-card { width: min(480px, 90vw); }
     .progress { background: rgba(255,255,255,.25); }
@@ -236,9 +238,9 @@ export class AppComponent implements OnInit {
   showResults = false;
   results: ResultItem[] = [];
 
-ngOnInit() {
-  this.getTopic();
-}
+  ngOnInit() {
+    this.getTopic();
+  }
 
   imageUrl(id: number) { return `${API_BASE}/items/${id}/image`; }
 
@@ -259,7 +261,16 @@ ngOnInit() {
     });
   }
 
-  reload() { this.fetchItems(); }
+  reload() {
+    this.fetchItems();
+  }
+
+  private urlRegex = /(https?:\/\/[^\s<]+)/g;
+  linkifyHtml(s: string | null | undefined): string {
+    const txt = (s ?? '').toString();
+    // Muunna URLit klikkilinkeiksi; Angularin oma sanitointi suojaa vaarallisilta tageilta
+    return txt.replace(this.urlRegex, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
 
   saveNickname() {
     this.nickname = (this.nickname || '').trim();

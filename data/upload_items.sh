@@ -1,25 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -ex
+HOST="http://localhost:8080"
 
-export HOST=http://localhost:8080
+# Delete all (ignore error if none exist)
+curl -fsS -X DELETE "$HOST/items" || true
 
-# Delete all
-curl -X DELETE $HOST/items
+post() {
+  # usage: post "description text" image.png
+  curl -fsS -X POST "$HOST/items" \
+    --form-string "description=$1" \
+    -F "image=@$2"
+}
 
-# Insert data
-curl -X POST $HOST/items -F "description=Karaoke" -F "image=@karaoke.png"
-curl -X POST $HOST/items -F "description=Ikuri Arcade" -F "image=@ikuriarcade.png"
-curl -X POST $HOST/items -F "description=Hervanta tour" -F "image=@herwood.png"
-curl -X POST $HOST/items -F "description=Pispala tour" -F "image=@pispala.png"
-curl -X POST $HOST/items -F "description=ZBase" -F "image=@zbase.png"
-curl -X POST $HOST/items -F "description=Counter Strike" -F "image=@counterstrike.png"
-curl -X POST $HOST/items -F "description=Pinball Union" -F "image=@pinball_union.png"
-curl -X POST $HOST/items -F "description=Save file" -F "image=@savefile.png"
-curl -X POST $HOST/items -F "description=Lautapeli (toimisto/Lategame/Taverna)" -F "image=@lautapeli.png"
-curl -X POST $HOST/items -F "description=Pubivisa. https://pubivisat.fi/tampere" -F "image=@pub_quiz.png"
-curl -X POST $HOST/items -F "description=Pubikierros" -F "image=@pubcrawl.png"
-curl -X POST $HOST/items -F "description=LANit / peli-ilta" -F "image=@gaming.png"
-curl -X POST $HOST/items -F "description=https://www.icerange.fi/" -F "image=@icerange.png"
-curl -X POST $HOST/items -F "description=https://www.spacebowling.fi/tampere/" -F "image=@bowling.png"
-
+post 'Lautapeli at toimisto/Lategame/Taverna' 'lautapeli.png'
+post 'Save file -visiitti https://www.savefile.fi' 'savefile.png'
+post 'Hervanta tour (ratikalla Hervantaan, Kultainen apina jne.)' 'herwood.png'
+post 'Pispala tour (Pulteri, Vastavirta, Kujakolli)' 'pispala.png'
+post 'ZBase (arcade, baaritiski) https://zbase.fi/tampere/' 'zbase.png'
+# post 'Counter Strike' 'counterstrike.png'
+post 'Ikuri Arcade https://www.ikuriarcade.com/' 'ikuriarcade.png'
+post 'Pinball Union https://pinballunion.fi/' 'pinball_union.png'
+post 'Pubivisailua https://pubivisat.fi/tampere' 'pub_quiz.png'
+post 'Pubikierros (Kahdet kasvot,Ohranjyvä,..)' 'pubcrawl.png'
+post 'Karaoke (Tiikerihai/..)' 'karaoke.png'
+post 'LANit / peli-ilta toimistolla' 'gaming.png'
+post 'Sivuluisua https://www.icerange.fi/' 'icerange.png'
+post 'Space Bowling https://www.spacebowling.fi/tampere/' 'bowling.png'
