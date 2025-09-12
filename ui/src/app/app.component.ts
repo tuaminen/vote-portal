@@ -180,18 +180,6 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
   `,
   styles: [`
-    /* Synthwave-fontti */
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&display=swap');
-
-
-
-
-
 
     /* Taustan animaatio */
     @keyframes gradientShift {
