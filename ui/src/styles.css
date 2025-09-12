@@ -51,7 +51,7 @@
   50%      { opacity: .885; filter: brightness(0.98) contrast(1.02); }
   52%      { opacity: .97; filter: brightness(0.96) contrast(1.05); }
 }
-.crt-flicker { animation: crtFlicker 3.2s infinite; }
+.crt-flicker { animation: crtFlicker 1.2s infinite; }
 
 /* Add class "crt-noise" for a touch of grain */
 @keyframes crtNoise {
