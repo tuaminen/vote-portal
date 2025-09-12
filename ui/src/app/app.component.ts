@@ -332,7 +332,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
       box-shadow: 0 120px 50px rgba(223, 22, 22, 0.85), 0 0 132px rgba(161, 9, 255, 0.89);
     }
     .results-table thead {
-      background: linear-gradient(135deg, rgba(255, 0, 13, 0.89), rgba(233, 21, 162, 0.25));
+      background: linear-gradient(135deg, rgba(10, 206, 206, 0.89), rgba(233, 21, 162, 0.25));
       backdrop-filter: blur(6px);
     }
     .results-table tbody tr {
@@ -341,16 +341,20 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     }
     .results-table tbody tr:hover {
       transform: scale(1.01);
-      background: rgba(255, 0, 0, 0.57);
+      background: rgba(206, 18, 231, 0.71);
       box-shadow: 0 0 18px rgba(149, 221, 224, 0.15) inset;
     }
 
      .bg-success-subtle  {
-        background-color: #038017ff !important;
+        background-color: #1f997fff !important;
      }
 
      .bg-danger-subtle   {
-        background-color: #ff000dff !important;
+        background-color: #bd1b51ff !important;
+     }
+
+     .bg-warning {
+        background-color: #ffffffff !important;
      }
   `]
 
