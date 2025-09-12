@@ -30,23 +30,28 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
   imports: [CommonModule, FormsModule, HttpClientModule],
   template: `
 
+<!--
+<div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative crt crt-flicker crt-noise crt-curved">
+-->
   <!-- Landing page -->
-  <div *ngIf="showLanding" class="landing d-flex flex-column justify-content-center align-items-center text-light text-center">
-    <h1 class="display-1 fw-bold mb-4">{{ landingTitle }}</h1>
-    <button class="btn btn-lg btn-primary fs-2 px-5 py-3 rounded-pill shadow-lg" (click)="startVoting()">
+  <div *ngIf="showLanding" class="crt landing d-flex flex-column justify-content-center align-items-center text-light text-center">
+    <h1 class="glitch" [attr.data-text]="landingTitle">{{ landingTitle }}</h1>
+        <!-- <h1 class="glitch display-1 fw-bold mb-4">!{{ landingTitle }}</h1> -->
+
+    <button class=" crt btn btn-lg btn-primary fs-1 px-5 py-3" (click)="startVoting()">
       Let's vote!
+      <i class="bi bi-hand-thumbs-up me-2"></i>
     </button>
   </div>
-
   <!-- Varsinainen äänestys -->
-  <div *ngIf="!showLanding" class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
+  <div *ngIf="!showLanding" class="crt min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
 
     <div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
       <!-- Header / Progress -->
       <div class="container-fluid px-4 pt-3 w-100" *ngIf="!finished">
         <div class="d-flex align-items-center gap-3">
           <div class="fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
-          <div class="progress flex-grow-1">
+          <div class="crt-flicker progress flex-grow-1">
             <div class="progress-bar" role="progressbar" [style.width.%]="items.length ? (currentIndex / items.length) * 100 : 0"></div>
           </div>
           <div class="fs-3 fw-bold">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
@@ -69,6 +74,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
         </div>
 
         <!-- Score buttons -5..0..+5 -->
+
         <div class="card-body bg-transparent text-center py-3">
           <div class="fs-2 fw-semibold text-white-90 desc" [innerHTML]="linkifyHtml(current.description)"></div>
         </div>
@@ -91,10 +97,10 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
         <!-- Navigation arrows -->
         <div class="mt-5 d-flex align-items-center gap-3 nav-arrows">
-          <button class="btn fs-2 fw-bold score-pill btn-secondary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
+          <button class="crt-flicker btn fs-2 fw-bold btn-primary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
             <i class="bi bi-arrow-left me-2"></i> Edellinen
           </button>
-          <button class="btn fs-2 fw-bold score-pill btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
+          <button class="crt-flicker btn fs-2 fw-bold btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
             Seuraava <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </div>
@@ -107,7 +113,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
           <div class="display-5 mb-2">Kiitos, {{ nickname }}!</div>
           <div class="fs-3 mb-4">Äänestys valmis.</div>
           <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <button class="btn btn-success btn-lg" (click)="sendVotes()" [disabled]="sending">
+            <button class="btn fs-2 fw-bold btn-primary" (click)="sendVotes()" [disabled]="sending">
               <i class="bi bi-upload me-2"></i> Lähetä palvelimelle
             </button>
             <button class="btn btn-outline-light btn-lg" (click)="reset()">
@@ -121,7 +127,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
         <div *ngIf="showResults">
           <div class="d-flex align-items-end justify-content-between mb-3 flex-wrap gap-3">
             <div>
-              <div class="display-6">Tulokset</div>
+              <h1 class="glitch fw-bold" [attr.data-text]="landingTitle">Tulokset</h1>
               <div class="text-white-50">Järjestetty korkeimmasta scoresta alaspäin</div>
             </div>
             <div class="d-flex gap-2">
@@ -178,6 +184,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     </div>
   </div>
 
+
   `,
   styles: [`
 
@@ -193,7 +200,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
       min-height: 100vh;
       background: linear-gradient(135deg, #000000ff, #1a1825ff, #360317ff, #002c3dff);
       background-size: 300% 300%;
-      animation: gradientShift 11s ease infinite;
+      animation: gradientShift 8s ease infinite;
       font-family: 'Orbitron', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
     }
     .landing h1 {
@@ -242,12 +249,12 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
     }
     .btn-primary:hover {
       filter: brightness(1.1);
-      box-shadow: 0 10px 28px rgba(181,23,240,.45), 0 0 24px rgba(181,23,240,.6);
+      box-shadow: 0 100px 128px rgba(181,23,240,.45), 0 0 224px rgba(181,23,240,.6);
     }
     .btn-secondary {
-      background: linear-gradient(135deg, #2C2F48, #3A3E62);
+      background: linear-gradient(135deg, #550785ff, #B517F0);
       border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 8px 24px rgba(0,0,0,.5), 0 0 14px rgba(255,255,255,.08);
+      box-shadow: 0 10px 28px rgba(181,23,240,.45), 0 0 24px rgba(181,23,240,.6);
     }
     .btn-outline-light {
       border-color: rgba(255,255,255,.35);
