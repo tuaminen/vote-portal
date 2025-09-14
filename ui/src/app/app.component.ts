@@ -173,8 +173,8 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
 
       <!-- Nickname overlay -->
       <div *ngIf="nicknameEditing" class="nickname-overlay">
-        <div class="nick-card p-4 rounded-4 shadow-lg bg-white text-dark">
-          <div class="fs-2 mb-3 text-center">Nimimerkki</div>
+        <div class="nick-card p-4 rounded-4 crt crt-flicker btn btn-primary">
+          <div class="fs-1 mb-3 text-uppercase text-center">Nimimerkki</div>
           <input class="form-control form-control-lg text-center" [(ngModel)]="nickname" placeholder="kirjoita nimimerkki…" (keyup.enter)="saveNickname()"/>
           <button class="btn btn-dark btn-lg w-100 mt-3" (click)="saveNickname()">
             <i class="bi bi-check2-circle me-2"></i>Aloita
@@ -308,9 +308,10 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
       background: radial-gradient(600px 300px at 20% 20%, rgba(122,11,192,.25), transparent 60%),
                   radial-gradient(600px 300px at 80% 80%, rgba(0,234,248,.22), transparent 60%),
                   rgba(0,0,0,.6);
+                   backdrop-filter: blur(6px); 
       display:flex; align-items:center; justify-content:center; z-index: 1000;
     }
-    .nick-card { width: min(480px, 90vw);
+    .nick-card { width: min(580px, 90vw);
       box-shadow: 0 20px 50px rgba(0,0,0,.55), 0 0 22px rgba(0,234,248,.25);
       border: 1px solid rgba(0,0,0,.08);
     }
