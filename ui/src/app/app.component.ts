@@ -175,8 +175,8 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
       <div *ngIf="nicknameEditing" class="nickname-overlay">
         <div class="nick-card p-4 rounded-4 crt crt-flicker btn btn-primary">
           <div class="fs-1 mb-3 text-uppercase text-center">Nimimerkki</div>
-          <input class="form-control form-control-lg text-center" [(ngModel)]="nickname" placeholder="kirjoita nimimerkki…" (keyup.enter)="saveNickname()"/>
-          <button class="btn btn-dark btn-lg w-100 mt-3" (click)="saveNickname()">
+          <input class="form-control form-control-lg text-center fs-2 fs-bold" [(ngModel)]="nickname" placeholder="kirjoita nimimerkki…" (keyup.enter)="saveNickname()"/>
+          <button class="crt-rgb fs-2 fs-bold btn btn-dark btn-lg w-100 mt-3" (click)="saveNickname()">
             <i class="bi bi-check2-circle me-2"></i>Aloita
           </button>
         </div>
