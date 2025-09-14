@@ -30,15 +30,13 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
   imports: [CommonModule, FormsModule, HttpClientModule],
   template: `
 
-<!--
-<div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative crt crt-flicker crt-noise crt-curved">
--->
+
   <!-- Landing page -->
   <div *ngIf="showLanding" class="crt landing d-flex flex-column justify-content-center align-items-center text-light text-center">
     <h1 class="glitch" [attr.data-text]="landingTitle">{{ landingTitle }}</h1>
         <!-- <h1 class="glitch display-1 fw-bold mb-4">!{{ landingTitle }}</h1> -->
 
-    <button class=" crt btn btn-lg btn-primary fs-1 px-5 py-3" (click)="startVoting()">
+    <button class="crt-rgb crt crt-curved btn btn-lg btn-primary fs-1 px-5 py-3 mt-5" (click)="startVoting()">
       Let's vote!
       <i class="bi bi-hand-thumbs-up me-2"></i>
     </button>
@@ -46,15 +44,15 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
   <!-- Varsinainen äänestys -->
   <div *ngIf="!showLanding" class="crt min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
 
-    <div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
+    <div class="min-vh-100 d-flex w-75 flex-column align-items-center justify-content-center text-light position-relative">
       <!-- Header / Progress -->
-      <div class="container-fluid px-4 pt-3 w-100" *ngIf="!finished">
+      <div class="container-fluid px-4 pt-3 mt-4" *ngIf="!finished">
         <div class="d-flex align-items-center gap-3">
-          <div class="fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
+          <div class="crt-rgb fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
           <div class="crt-flicker progress flex-grow-1">
             <div class="progress-bar" role="progressbar" [style.width.%]="items.length ? (currentIndex / items.length) * 100 : 0"></div>
           </div>
-          <div class="fs-3 fw-bold">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
+          <div class="crt-rgb fs-3 fw-bold">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
         </div>
       </div>
 
@@ -69,14 +67,14 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
 
       <!-- Voting Card -->
       <ng-container *ngIf="!finished && !loading && !error && current">
-        <div class="card vote-card mt-2">
+        <div class="crt card vote-card m-3">
           <img [src]="imageUrl(current.id)" class="card-img-top" [alt]="current.description" loading="eager"/>
         </div>
 
         <!-- Score buttons -5..0..+5 -->
 
         <div class="card-body bg-transparent text-center py-3">
-          <div class="fs-2 fw-semibold text-white-90 desc" [innerHTML]="linkifyHtml(current.description)"></div>
+          <div class="crt-rgb fs-2 fw-semibold text-white-90 desc" [innerHTML]="linkifyHtml(current.description)"></div>
         </div>
 
         <div class="mt-4 d-flex justify-content-center">
@@ -97,10 +95,10 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
 
         <!-- Navigation arrows -->
         <div class="mt-5 d-flex align-items-center gap-3 nav-arrows">
-          <button class="crt-flicker btn fs-2 fw-bold btn-primary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
+          <button class="crt-rgb crt-flicker btn fs-2 btn-primary text-white px-4 py-2" (click)="goPrev()" aria-label="Edellinen">
             <i class="bi bi-arrow-left me-2"></i> Edellinen
           </button>
-          <button class="crt-flicker btn fs-2 fw-bold btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
+          <button class="crt-rgb crt-flicker btn fs-2 btn-primary text-white px-4 py-2" (click)="goNext()" aria-label="Seuraava">
             Seuraava <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </div>
@@ -108,62 +106,64 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
       </ng-container>
 
       <!-- Finished -->
-      <div *ngIf="finished && !loading && !error" class="container py-4">
-        <div class="text-center mb-4" *ngIf="!showResults">
-          <div class="display-5 mb-2">Kiitos, {{ nickname }}!</div>
-          <div class="fs-3 mb-4">Äänestys valmis.</div>
+      <div class="w-100" *ngIf="finished && !loading && !error">
+
+        <!-- send votes -->                    
+        <div class="text-center mb-4 container" *ngIf="!showResults">
+          <div class="crt-rgb display-5 mb-2">Kiitos, {{ nickname }}!</div>
+          <div class="crt-rgb fs-3 mb-4">Äänestys valmis.</div>
           <div class="d-flex justify-content-center gap-3 flex-wrap">
             <button class="btn fs-2 fw-bold btn-primary" (click)="sendVotes()" [disabled]="sending">
               <i class="bi bi-upload me-2"></i> Lähetä palvelimelle
             </button>
-            <button class="btn btn-outline-light btn-lg" (click)="reset()">
-              <i class="bi bi-arrow-counterclockwise me-2"></i> Uudestaan
+            <button class="crt-rgb btn fs-2 fw-bold btn-outline-light btn-lg" (click)="reset()">
+              <i class="bi bi-arrow-counterclockwise me-2"></i> Muuta ääniä
             </button>
           </div>
           <div class="mt-3" *ngIf="sendResult" [class]="sendOk ? 'text-success' : 'text-warning'">{{ sendResult }}</div>
         </div>
 
         <!-- Tulossivu -->
-        <div *ngIf="showResults">
-          <div class="d-flex align-items-end justify-content-between mb-3 flex-wrap gap-3">
+        <div class="results-page" *ngIf="showResults">
+          <div class="d-flex align-items-end justify-content-between mb-3 flex-wrap gap-3 m-8">
             <div>
-              <h1 class="glitch fw-bold" [attr.data-text]="landingTitle">Tulokset</h1>
+              <h1 class="crt glitch fw-bold text-uppercase" data-text="Tulokset">Tulokset</h1>
               <div class="text-white-50">Järjestetty korkeimmasta scoresta alaspäin</div>
             </div>
             <div class="d-flex gap-2">
-              <button class="btn fs-2 btn-outline-light" (click)="reloadResults()"><i class="bi bi-arrow-clockwise me-2"></i>Päivitä</button>
-              <button class="btn fs-2 btn-outline-light" (click)="reset()"><i class="bi bi-arrow-counterclockwise me-2"></i>Uudestaan</button>
+              <!-- <button class="btn fs-2 btn-primary text-white px-4 py-2" (click)="reloadResults()"><i class="bi text-white  bi-arrow-clockwise me-2"></i>Päivitä</button> -->
+              <button class="btn fs-2 btn-primary text-white px-4 py-2" (click)="reset()"><i class="bi bi-arrow-counterclockwise me-2"></i>Muuta ääniä</button>
             </div>
           </div>
 
-          <div class="table-responsive shadow-lg rounded-4 overflow-hidden results-wrap">
-            <table class="table-striped table-hover align-middle mb-0 results-table">
+          <div class="table-responsive rounded-4 overflow-hidden results-wrap mb-5">
+            <table class="crt table-striped table-hover align-middle results-table results-wrap">
               <thead>
-                <tr class="text-uppercase fs-2 text-white">
-                  <th class="px-4">#</th>
+                <tr class="text-uppercase fs-4 text-white">
+                  <th class="px-3">#</th>
                   <th>Kuva</th>
                   <th>Kuvaus</th>
-                  <th class="text-end">Voters</th>
-                  <th class="text-end">Score</th>
-                  <th class="text-end">Average</th>
-                  <th class="text-end">Pos</th>
-                  <th class="text-end">Neg</th>
-                  <th class="text-end">Rank</th>
+                  <th class="text-end">Äänestäjiä</th>
+                  <th class="text-end">Pisteet</th>
+                  <th class="text-center">K.A.</th>
+                  <th class="text-center"><i class="bi bi-hand-thumbs-up me-2"></i></th>
+                  <th class="text-center"><i class="bi bi-hand-thumbs-down me-2"></i></th>
+                  <!-- <th class="text-center"><i class="bi bi-trophy me-2"></i></th> -->
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let r of results; let i = index">
-                  <td class="px-4 fs-2 fw-bold">{{ i + 1 }}</td>
-                  <td style="width: 120px;">
-                    <img [src]="imageUrl(r.item_id)" class="img-thumbnail rounded-3" style="width:110px;height:70px;object-fit:cover;" alt="thumb"/>
+                  <td class="px-3 fs-2 fw-bold">{{ i + 1 }}</td>
+                  <td >
+                    <img [src]="imageUrl(r.item_id)" class="img-thumbnail" alt="thumb"/>
                   </td>
-                  <td class="fw-semibold desc fs-4" [innerHTML]="linkifyHtml(descriptionOf(r.item_id))"></td>
+                  <td class="desc fs-5" [innerHTML]="linkifyHtml(descriptionOf(r.item_id))"></td>
                   <td class="text-end fs-2">{{ r.voters }}</td>
                   <td class="text-end fs-2 fw-bold">{{ r.score }}</td>
                   <td class="text-end fs-2">{{ r.average | number:'1.2-2' }}</td>
                   <td class="text-end fs-2"><span class="badge bg-success-subtle text-white px-3 py-2">{{ r.pos }}</span></td>
-                  <td class="text-end fs-2"><span class="badge bg-danger-subtle text-white px-3 py-2">{{ r.neg }}</span></td>
-                  <td class="text-end fs-2"><span class="badge bg-warning text-dark px-3 py-2">{{ r.rank | number:'1.3-3' }}</span></td>
+                  <td class="text-end fs-2"><span class="badge bg-danger-subtle text-white px-3 py-2 mx-3">{{ r.neg }}</span></td>
+                  <!-- <td class="text-end fs-2"><span class="badge bg-warning text-dark px-1 py-2 mx-3">{{ r.rank | number:'1.3-3' }}</span></td> -->
                 </tr>
               </tbody>
             </table>
