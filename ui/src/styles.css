@@ -136,3 +136,165 @@
 h1 {
   font-size: 100px;
 }
+
+/* Moved from app.component.ts */
+
+/* Taustan animaatio */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Landing-näkymä */
+.landing {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #000000ff, #1a1825ff, #360317ff, #002c3dff);
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
+  font-family: 'Orbitron', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+.landing h1 {
+  letter-spacing: .04em;
+  text-shadow: 0 0 16px rgba(0,234,248,.65), 0 0 32px rgba(122,11,192,.55);
+}
+
+/* App-root tausta */
+:host {
+  display:block; min-height:100vh;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(122,11,192,.25), transparent 60%),
+              radial-gradient(900px 500px at 90% 90%, rgba(187, 21, 165, 0.1), transparent 60%),
+              linear-gradient(135deg, #000000ff 0%, #270000ff 100%);
+  font-family: 'Rajdhani', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #E9EAF2;
+}
+
+/* Kortti kuvalle */
+.vote-card {
+  width: min(900px, 92vw); height: min(70vh, 720px);
+  background: transparent;
+  border: 0px;
+}
+.vote-card img {
+  width: 100%; height: 100%; object-fit: contain;
+}
+
+/* Navigointinuolet-alue: irti alareunasta */
+.nav-arrows { margin-bottom: 3.5rem; }
+
+/* Neon-napit (perustuvat Bootstrapin btn-* luokkiin) */
+.btn-primary {
+  background: linear-gradient(135deg, #7A0BC0, #B517F0);
+  border: 1px solid rgba(181,23,240,.65);
+  box-shadow: 0 8px 24px rgba(181,23,240,.35), 0 0 16px rgba(181,23,240,.45);
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 100px 128px rgba(181,23,240,.45), 0 0 224px rgba(181,23,240,.6);
+}
+.btn-secondary {
+  background: linear-gradient(135deg, #550785ff, #B517F0);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 10px 28px rgba(181,23,240,.45), 0 0 24px rgba(181,23,240,.6);
+}
+.btn-outline-light {
+  border-color: rgba(255,255,255,.35);
+}
+
+/* Vote-pill-napit */
+.score-pill {
+  border-width: 2px; border-radius: 999px; padding: .6rem 1rem;
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  text-transform: none;
+}
+/* Väritetyt pillit neon-hehkulla */
+.btn-success.score-pill {
+  background: linear-gradient(135deg, #0c2c21ff, #00FFB3);
+  border-color: rgba(11, 59, 45, 0.6);
+  color:#00130c;
+  box-shadow: 0 0 118px rgba(0,255,179,.35);
+}
+.btn-danger.score-pill {
+  background: linear-gradient(135deg, #460c16ff, #FF5E7E);
+  border-color: rgba(24, 23, 23, 0.65);
+  box-shadow: 0 0 118px rgba(255,46,86,.35);
+}
+.btn-secondary.score-pill {
+  background: linear-gradient(135deg, #2C2F48, #3A3E62);
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 0 114px rgba(255,255,255,.12);
+}
+.score-pill:hover {
+  transform: scale(1.08);
+  filter: brightness(1.06);
+}
+.score-pill.active {
+  box-shadow:
+    0 0 0 .3rem rgba(255,255,255,.28) inset,
+    0 0 22px rgba(255,255,255,.85),
+    0 0 40px rgba(122,11,192,.35);
+  transform: scale(1.12);
+  font-weight: 900;
+}
+
+/* Linkit descriptionissa */
+.desc a {
+  color: #78F7FF;
+  text-decoration: underline;
+}
+.desc a:hover { text-decoration: none; filter: brightness(1.15); }
+
+/* Nickname overlay */
+.nickname-overlay { position: fixed; inset: 0;
+  background: radial-gradient(600px 300px at 20% 20%, rgba(122,11,192,.25), transparent 60%),
+              radial-gradient(600px 300px at 80% 80%, rgba(0,234,248,.22), transparent 60%),
+              rgba(0,0,0,.6);
+               backdrop-filter: blur(6px); 
+  display:flex; align-items:center; justify-content:center; z-index: 1000;
+}
+.nick-card { width: min(580px, 90vw);
+  box-shadow: 0 20px 50px rgba(0,0,0,.55), 0 0 22px rgba(0,234,248,.25);
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+/* Progress bar neon */
+.progress {
+  background: rgba(82, 7, 16, 0.45); height:24px; border-radius: 999px; overflow: hidden; }
+
+.progress-bar {
+  background: linear-gradient(90deg, #ff0000ff, #a10051ff);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.95), inset 0 0 8px rgba(245, 155, 155, 0.85);
+}
+
+/* Tulostaulukko */
+.results-wrap {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.89), rgba(233, 21, 162, 0.25));
+
+  border: 1px solid rgba(249, 249, 250, 0.77);
+  box-shadow: 0 120px 50px rgba(223, 22, 22, 0.85), 0 0 132px rgba(161, 9, 255, 0.89);
+}
+.results-table thead {
+  background: linear-gradient(135deg, rgba(10, 206, 206, 0.89), rgba(233, 21, 162, 0.25));
+  backdrop-filter: blur(6px);
+}
+.results-table tbody tr {
+  border: 1px solid rgba(102, 20, 51, 0.77);
+  transition: transform .08s ease, background .08s ease, box-shadow .08s ease;
+}
+.results-table tbody tr:hover {
+  transform: scale(1.01);
+  background: rgba(206, 18, 231, 0.71);
+  box-shadow: 0 0 18px rgba(149, 221, 224, 0.15) inset;
+}
+
+ .bg-success-subtle  {
+    background-color: #1f997fff !important;
+ }
+
+ .bg-danger-subtle   {
+    background-color: #bd1b51ff !important;
+ }
+
+ .bg-warning {
+    background-color: #ffffffff !important;
+ }
