@@ -37,7 +37,7 @@
     box-shadow: -100px 150px 350px rgba(46, 40, 100, 0.85), 100px -150px 392px rgba(146, 13, 163, 0.69);
 }
 .vote-card img {
-  width: 350px !important;
+  width: 310px !important;
   /* height: min(70vh, 720px); */
   width: 100%; 
   height: 100%; 
