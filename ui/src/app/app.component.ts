@@ -22,7 +22,7 @@ interface ItemMeta { id: number; description: string; }
 interface VoteIn { item_id: number; score: Vote; }
 interface ResultItem { item_id: number; voters: number; score: number; average: number; pos: number; neg: number; rank: number; }
 
-const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080'; //|| 'http://localhost:8080';
+const API_BASE = localStorage.getItem('API_BASE') ||  'http://localhost:8080';
 
 @Component({
   selector: 'app-root',
@@ -108,7 +108,7 @@ const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.152.11:8080';
       <!-- Finished -->
       <div class="w-100" *ngIf="finished && !loading && !error">
 
-        <!-- send votes -->                    
+        <!-- send votes -->
         <div class="text-center mb-4 container" *ngIf="!showResults">
           <div class="crt-rgb display-5 mb-2">Kiitos, {{ nickname }}!</div>
           <div class="crt-rgb fs-3 mb-4">Äänestys valmis.</div>
