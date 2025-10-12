@@ -29,5 +29,8 @@ post 'Pubivisailua https://pubivisat.fi/tampere' 'pub_quiz.jpg'
 post 'Pubikierros (Kahdet kasvot,Ohranjyvä,..)' 'pubcrawl.jpg'
 #post 'Karaoke' 'karaoke.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
+post 'Pizzaa Napolissa https://www.pizzerianapoli.fi' 'napoli.jpg'
+post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
 #post 'Sivuluisua https://www.icerange.fi/' 'icerange.jpg'
 #post 'Space Bowling https://www.spacebowling.fi/tampere/' 'bowling.jpg'
+
