@@ -9,6 +9,8 @@ export interface TopicOut { title: string; }
 export interface ItemMeta { id: number; description: string; }
 export interface VoteIn { item_id: number; score: Vote; }
 export interface ResultItem { item_id: number; voters: number; score: number; average: number; pos: number; neg: number; rank: number; }
+export interface VoteDistribution { item_id: number; distribution: Record<number, number>; }
+
 
 export const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
@@ -43,5 +45,9 @@ export class VoteService {
 
   getResults(): Observable<ResultItem[]> {
     return this.http.get<ResultItem[]>(`${API_BASE}/results`);
+  }
+
+  getVoteDistribution(): Observable<VoteDistribution[]> {
+    return this.http.get<VoteDistribution[]>(`${API_BASE}/results/distribution`);
   }
 }

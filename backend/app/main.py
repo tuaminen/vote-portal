@@ -7,7 +7,7 @@ from sqlmodel import select
 from sqlalchemy import func, delete, case
 from .db import init_db, get_session
 from .models import Item, Vote
-from .schemas import TopicOut, ItemMeta, ItemCreated, VoteBatchIn, ResultItem
+from .schemas import TopicOut, ItemMeta, ItemCreated, VoteBatchIn, ResultItem, VoteDistribution
 import os
 
 
@@ -167,6 +167,33 @@ def get_results():
 def get_results_ranked():
     data = get_results()
     return sorted(data, key=lambda x: x.rank, reverse=True)
+
+@app.get("/results/distribution", response_model=list[VoteDistribution])
+def get_vote_distribution():
+    """
+    Returns vote distribution for each item.
+    For each item, shows how many votes were cast for each score value (-5 to 5).
+    """
+    with get_session() as session:
+        # Get all votes
+        votes = session.exec(select(Vote.item_id, Vote.score)).all()
+        
+        # Group by item_id and count scores
+        distribution_map: dict[int, dict[int, int]] = {}
+        for item_id, score in votes:
+            if item_id not in distribution_map:
+                distribution_map[item_id] = {}
+            if score not in distribution_map[item_id]:
+                distribution_map[item_id][score] = 0
+            distribution_map[item_id][score] += 1
+        
+        # Convert to list of VoteDistribution
+        result = [
+            VoteDistribution(item_id=item_id, distribution=dist)
+            for item_id, dist in distribution_map.items()
+        ]
+        return result
+
 
 @app.delete("/items/{item_id}", status_code=204)
 def delete_item(item_id: int):

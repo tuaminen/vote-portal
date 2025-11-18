@@ -39,3 +39,7 @@ class ResultItem(BaseModel):
     pos: int                 # positiivisten äänien määrä (score > 0)
     neg: int                 # negatiivisten äänien määrä (score < 0)
     rank: float              # engagement-painotettu piste (0..1), iso parempi
+
+class VoteDistribution(BaseModel):
+    item_id: int
+    distribution: dict[int, int]  # score (-5..5) -> count

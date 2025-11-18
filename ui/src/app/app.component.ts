@@ -2,7 +2,7 @@ import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
-import { VoteService, Vote, ItemMeta, ResultItem } from './vote.service';
+import { VoteService, Vote, ItemMeta, ResultItem, VoteDistribution } from './vote.service';
 import { LandingComponent } from './landing/landing.component';
 import { VotingComponent } from './voting/voting.component';
 import { ResultsComponent } from './results/results.component';
@@ -89,6 +89,7 @@ import { NicknameComponent } from './nickname/nickname.component';
         *ngIf="showResults && !loading && !error"
         [results]="results"
         [items]="items"
+        [distributions]="distributions"
         (reset)="reset()">
       </app-results>
     </div>
@@ -117,6 +118,7 @@ export class AppComponent implements OnInit {
 
   showResults = false;
   results: ResultItem[] = [];
+  distributions: VoteDistribution[] = [];
 
   ngOnInit() {
     this.getTopic();
@@ -253,6 +255,14 @@ export class AppComponent implements OnInit {
       },
       error: () => {
         // Leave results empty, headers will still show
+      }
+    });
+    this.voteService.getVoteDistribution().subscribe({
+      next: (res) => {
+        this.distributions = res ?? [];
+      },
+      error: () => {
+        this.distributions = [];
       }
     });
   }
