@@ -1,6 +1,7 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
+
 /dist
 /tmp
 /out-tsc
@@ -11,6 +12,7 @@ ui/.angular
 ui/node_modules
 ui/npm-debug.log
 ui/yarn-error.log
+ui/dist
 
 # IDEs and editors
 .idea/
