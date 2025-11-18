@@ -35,6 +35,15 @@ import { NicknameComponent } from './nickname/nickname.component';
 
     <!-- Voting interface -->
     <div *ngIf="!showLanding" class="crt min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
+      <!-- Show Results Button (Top Right) -->
+      <button 
+        *ngIf="!showResults" 
+        class="btn btn-primary position-fixed top-0 end-0 m-3 fs-4 px-4 py-2" 
+        (click)="loadResults()"
+        style="z-index: 1000;">
+        <i class="bi bi-trophy me-2"></i>Näytä tulokset
+      </button>
+
       <!-- Loading / Error states -->
       <div class="text-center mt-5" *ngIf="loading">
         <div class="display-6">Ladataan…</div>
@@ -48,7 +57,7 @@ import { NicknameComponent } from './nickname/nickname.component';
 
       <!-- Voting Card -->
       <app-voting 
-        *ngIf="!finished && !loading && !error"
+        *ngIf="!finished && !loading && !error && !showResults"
         [items]="items"
         [currentIndex]="currentIndex"
         [currentScore]="currentScore"
@@ -59,8 +68,8 @@ import { NicknameComponent } from './nickname/nickname.component';
       </app-voting>
 
       <!-- Finished - send votes screen -->
-      <div class="w-100" *ngIf="finished && !loading && !error">
-        <div class="text-center mb-4 container" *ngIf="!showResults">
+      <div class="w-100" *ngIf="finished && !loading && !error && !showResults">
+        <div class="text-center mb-4 container">
           <div class="crt-rgb display-5 mb-2">Kiitos, {{ nickname }}!</div>
           <div class="crt-rgb fs-3 mb-4">Äänestys valmis.</div>
           <div class="d-flex justify-content-center gap-3 flex-wrap">
@@ -73,15 +82,15 @@ import { NicknameComponent } from './nickname/nickname.component';
           </div>
           <div class="mt-3" *ngIf="sendResult" [class]="sendOk ? 'text-success' : 'text-warning'">{{ sendResult }}</div>
         </div>
-
-        <!-- Results page -->
-        <app-results 
-          *ngIf="showResults"
-          [results]="results"
-          [items]="items"
-          (reset)="reset()">
-        </app-results>
       </div>
+
+      <!-- Results page -->
+      <app-results 
+        *ngIf="showResults && !loading && !error"
+        [results]="results"
+        [items]="items"
+        (reset)="reset()">
+      </app-results>
     </div>
   `,
   styles: []
