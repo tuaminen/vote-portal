@@ -10,10 +10,10 @@ import { ItemMeta, Vote, VoteService } from '../vote.service';
     <!-- Full-screen voting interface with background image -->
     <ng-container *ngIf="current">
       <div class="voting-fullscreen">
-        <!-- Background Image -->
-        <div class="voting-background">
-          <img [src]="voteService.imageUrl(current.id)" 
-               [alt]="current.description" 
+        <!-- Background Image with animation trigger -->
+        <div class="voting-background" *ngFor="let item of [current]; trackBy: trackByItemId">
+          <img [src]="voteService.imageUrl(item.id)" 
+               [alt]="item.description" 
                loading="eager"
                class="voting-background-image"/>
           <!-- Dark gradient overlay for better readability -->
@@ -86,6 +86,10 @@ export class VotingComponent {
   scale: Vote[] = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
 
   get current(): ItemMeta | null { return this.items[this.currentIndex] ?? null; }
+
+  trackByItemId(index: number, item: ItemMeta | null): number {
+    return item?.id ?? 0;
+  }
 
   private urlRegex = /(https?:\/\/[^\s<]+)/g;
   linkifyHtml(s: string | null | undefined): string {
