@@ -1080,3 +1080,292 @@ a:focus-visible {
     transform: translateY(0);
   }
 }
+
+/* ============================================
+   SYNTHWAVE GRID BACKGROUND WITH SUNSET
+   ============================================ */
+
+/* Main synthwave background container */
+.synthwave-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+/* Sky gradient with sunset colors - VERY DARK THEME */
+.synthwave-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+      /* Pure black at top */
+      #000000 0%,
+      #000000 15%,
+      #050208 25%,
+      /* Very dark purple transition */
+      #0A0815 40%,
+      #120a1f 50%,
+      /* Barely visible purple at horizon */
+      #1a0e2e 58%,
+      #1d1433 63%,
+      #170822 68%,
+      /* Very subtle dark magenta glow at horizon */
+      #2a1a3a 72%,
+      #332475 78%,
+      /* Back to deep black at grid level */
+      #0A0815 88%,
+      #000000 100%);
+  animation: skyPulse 20s ease-in-out infinite;
+}
+
+@keyframes skyPulse {
+
+  0%,
+  100% {
+    filter: brightness(0.1) saturate(0);
+  }
+
+  50% {
+    filter: brightness(1.05) saturate(1.0);
+  }
+}
+
+/* Sun on the horizon - VERY DARK THEME */
+.synthwave-sun {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle,
+      rgba(120, 40, 50, 0.8) 0%,
+      rgba(100, 30, 45, 0.6) 25%,
+      rgba(80, 20, 40, 0.4) 50%,
+      rgba(60, 15, 35, 0.2) 70%,
+      rgba(40, 10, 30, 0.1) 85%,
+      transparent 100%);
+  box-shadow:
+    0 0 60px 20px rgba(120, 40, 50, 0.3),
+    0 0 120px 40px rgba(100, 30, 45, 0.2),
+    0 0 180px 60px rgba(80, 20, 40, 0.1);
+  animation: sunPulse 8s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes sunPulse {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* Sun reflection/glow streaks - VERY DARK */
+.synthwave-sun::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(ellipse 100% 300% at 50% 50%,
+      rgba(60, 20, 35, 0.15) 0%,
+      rgba(80, 20, 40, 0.1) 30%,
+      transparent 60%);
+  animation: sunGlow 6s ease-in-out infinite;
+}
+
+@keyframes sunGlow {
+
+  0%,
+  100% {
+    opacity: .3;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Grid container with perspective */
+.synthwave-grid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80%;
+  perspective: 500px;
+  perspective-origin: 50% 45%;
+  z-index: 2;
+}
+
+/* Grid lines layer - VERY DARK */
+.synthwave-grid-lines {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(75deg) translateZ(-200px);
+  transform-style: preserve-3d;
+  background-image:
+    /* Vertical lines */
+    repeating-linear-gradient(to right,
+      transparent 0px,
+      transparent 49px,
+      rgba(181, 23, 240, 0.4) 49px,
+      rgba(181, 23, 240, 0.4) 51px,
+      transparent 41px,
+      transparent 100px),
+    /* Horizontal lines */
+    repeating-linear-gradient(to bottom,
+      transparent 0px,
+      transparent 49px,
+      rgba(0, 234, 248, 0.35) 49px,
+      rgba(0, 234, 248, 0.35) 51px,
+      transparent 51px,
+      transparent 100px);
+  background-size: 100px 100px;
+  background-position: 0 0;
+  animation: gridScroll 15s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(181, 23, 240, 0.3)) drop-shadow(0 0 15px rgba(0, 234, 248, 0.2));
+}
+
+@keyframes gridScroll {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 100px;
+  }
+}
+
+/* Glowing grid effect layer */
+.synthwave-grid-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(181, 23, 240, 0.1) 20%,
+      rgba(255, 10, 120, 0.15) 50%,
+      rgba(0, 234, 248, 0.2) 80%,
+      rgba(181, 23, 240, 0.3) 100%);
+  pointer-events: none;
+}
+
+/* Horizon glow line */
+.synthwave-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(to right,
+      transparent 0%,
+      rgba(0, 234, 248, 0.3) 10%,
+      rgba(255, 10, 120, 0.8) 50%,
+      rgba(0, 234, 248, 0.3) 90%,
+      transparent 100%);
+  box-shadow:
+    0 0 20px 4px rgba(255, 10, 120, 0.6),
+    0 0 40px 8px rgba(0, 234, 248, 0.4),
+    0 0 60px 12px rgba(181, 23, 240, 0.3);
+  z-index: 3;
+  animation: horizonPulse 4s ease-in-out infinite;
+}
+
+@keyframes horizonPulse {
+
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scaleX(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1.05);
+  }
+}
+
+/* Stars in the sky */
+.synthwave-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent),
+    radial-gradient(1px 1px at 15% 15%, white, transparent),
+    radial-gradient(2px 2px at 75% 25%, white, transparent);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: starsMove 60s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes starsMove {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/* Atmospheric haze for depth */
+.synthwave-haze {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 120% 50% at 50% 50%,
+      transparent 0%,
+      rgba(181, 23, 240, 0.1) 40%,
+      rgba(255, 10, 120, 0.15) 60%,
+      rgba(10, 8, 21, 0.6) 100%);
+  pointer-events: none;
+  animation: hazeShift 25s ease-in-out infinite;
+}
+
+@keyframes hazeShift {
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Apply synthwave background to specific components */
+.landing.synthwave,
+:host.synthwave {
+  position: relative;
+}
+
+/* Override default landing background when synthwave is active */
+.landing.synthwave {
+  background: transparent !important;
+  animation: none;
+}
+
+.landing.synthwave::before {
+  display: none;
+}
+
+/* Ensure content is above the background */
+.synthwave-bg~* {
+  position: relative;
+  z-index: 1;
+}
