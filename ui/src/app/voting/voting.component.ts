@@ -7,55 +7,68 @@ import { ItemMeta, Vote, VoteService } from '../vote.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
-      <!-- Header / Progress -->
-      <div class="container-fluid px-4 pt-3 mt-4">
-        <div class="d-flex align-items-center gap-3">
-          <div class="crt-rgb fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
-          <div class="crt-flicker progress flex-grow-1">
-            <div class="progress-bar" role="progressbar" [style.width.%]="items.length ? (currentIndex / items.length) * 100 : 0"></div>
+    <!-- Full-screen voting interface with background image -->
+    <ng-container *ngIf="current">
+      <div class="voting-fullscreen">
+        <!-- Background Image -->
+        <div class="voting-background">
+          <img [src]="voteService.imageUrl(current.id)" 
+               [alt]="current.description" 
+               loading="eager"
+               class="voting-background-image"/>
+          <!-- Dark gradient overlay for better readability -->
+          <div class="voting-overlay-gradient"></div>
+        </div>
+
+        <!-- Fixed Progress Bar at Top -->
+        <div class="voting-header">
+          <div class="container-fluid px-4 py-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="crt-rgb fs-3 fw-bold text-truncate">{{ nickname || '—' }}</div>
+              <div class="crt-flicker progress flex-grow-1">
+                <div class="progress-bar" role="progressbar" [style.width.%]="items.length ? (currentIndex / items.length) * 100 : 0"></div>
+              </div>
+              <div class="crt-rgb fs-3 fw-bold">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
+            </div>
           </div>
-          <div class="crt-rgb fs-3 fw-bold">{{ items.length ? (currentIndex + 1) : 0 }} / {{ items.length }}</div>
-        </div>
-      </div>
-
-      <!-- Voting Card -->
-      <ng-container *ngIf="current">
-        <div class="crt card vote-card m-3">
-          <img [src]="voteService.imageUrl(current.id)" class="card-img-top" [alt]="current.description" loading="eager"/>
         </div>
 
-        <div class="card-body bg-transparent text-center py-3">
-          <div class="crt-rgb fs-2 fw-semibold text-white-90 desc" [innerHTML]="linkifyHtml(current.description)"></div>
-        </div>
+        <!-- Bottom Overlay with Controls -->
+        <div class="voting-controls-overlay">
+          <!-- Description Text -->
+          <div class="text-center mb-3 px-3">
+            <div class="crt-rgb fs-4 fw-semibold desc" [innerHTML]="linkifyHtml(current.description)"></div>
+          </div>
 
-        <div class="mt-4 d-flex justify-content-center">
-          <div class="btn-group btn-group-lg gap-2">
-            <button *ngFor="let v of scale" (click)="selectScore.emit(v)"
-                    class="btn fw-bold score-pill"
-                    [ngClass]="{
-                      'btn-danger text-white': v < 0,
-                      'btn-secondary text-white': v === 0,
-                      'btn-success text-white': v > 0,
-                      'active': currentScore === v
-                    }">
-              <i class="bi" [ngClass]="{ 'bi-hand-thumbs-down': v < 0, 'bi-dash': v === 0, 'bi-hand-thumbs-up': v > 0 }"></i>
-              <span class="ms-1">{{ v }}</span>
+          <!-- Voting Buttons -->
+          <div class="d-flex justify-content-center mb-3">
+            <div class="btn-group btn-group-lg gap-2 flex-wrap justify-content-center">
+              <button *ngFor="let v of scale" (click)="selectScore.emit(v)"
+                      class="btn fw-bold score-pill"
+                      [ngClass]="{
+                        'btn-danger text-white': v < 0,
+                        'btn-secondary text-white': v === 0,
+                        'btn-success text-white': v > 0,
+                        'active': currentScore === v
+                      }">
+                <i class="bi" [ngClass]="{ 'bi-hand-thumbs-down': v < 0, 'bi-dash': v === 0, 'bi-hand-thumbs-up': v > 0 }"></i>
+                <span class="ms-1">{{ v }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="d-flex align-items-center justify-content-center gap-3 pb-4">
+            <button class="crt-rgb crt-flicker btn fs-3 btn-primary text-white px-5 py-3" (click)="prev.emit()" aria-label="Edellinen">
+              <i class="bi bi-arrow-left me-2"></i> Edellinen
+            </button>
+            <button class="crt-rgb crt-flicker btn fs-3 btn-primary text-white px-5 py-3" (click)="next.emit()" aria-label="Seuraava">
+              Seuraava <i class="bi bi-arrow-right ms-2"></i>
             </button>
           </div>
         </div>
-
-        <!-- Navigation arrows -->
-        <div class="mt-5 d-flex align-items-center gap-3 nav-arrows">
-          <button class="crt-rgb crt-flicker btn fs-2 btn-primary text-white px-4 py-2" (click)="prev.emit()" aria-label="Edellinen">
-            <i class="bi bi-arrow-left me-2"></i> Edellinen
-          </button>
-          <button class="crt-rgb crt-flicker btn fs-2 btn-primary text-white px-4 py-2" (click)="next.emit()" aria-label="Seuraava">
-            Seuraava <i class="bi bi-arrow-right ms-2"></i>
-          </button>
-        </div>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
   `
 })
 export class VotingComponent {
