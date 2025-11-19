@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ItemMeta, Vote, VoteService } from '../vote.service';
 
 @Component({
-    selector: 'app-voting',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
-    <div class="min-vh-100 d-flex w-75 flex-column align-items-center justify-content-center text-light position-relative">
+  selector: 'app-voting',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
       <!-- Header / Progress -->
       <div class="container-fluid px-4 pt-3 mt-4">
         <div class="d-flex align-items-center gap-3">
@@ -30,7 +30,7 @@ import { ItemMeta, Vote, VoteService } from '../vote.service';
         </div>
 
         <div class="mt-4 d-flex justify-content-center">
-          <div class="btn-group btn-group-lg flex-wrap gap-2">
+          <div class="btn-group btn-group-lg gap-2">
             <button *ngFor="let v of scale" (click)="selectScore.emit(v)"
                     class="btn fw-bold score-pill"
                     [ngClass]="{
@@ -59,37 +59,37 @@ import { ItemMeta, Vote, VoteService } from '../vote.service';
   `
 })
 export class VotingComponent {
-    voteService = inject(VoteService);
+  voteService = inject(VoteService);
 
-    @Input() items: ItemMeta[] = [];
-    @Input() currentIndex = 0;
-    @Input() currentScore: Vote | null = null;
-    @Input() nickname = '';
+  @Input() items: ItemMeta[] = [];
+  @Input() currentIndex = 0;
+  @Input() currentScore: Vote | null = null;
+  @Input() nickname = '';
 
-    @Output() selectScore = new EventEmitter<Vote>();
-    @Output() next = new EventEmitter<void>();
-    @Output() prev = new EventEmitter<void>();
+  @Output() selectScore = new EventEmitter<Vote>();
+  @Output() next = new EventEmitter<void>();
+  @Output() prev = new EventEmitter<void>();
 
-    scale: Vote[] = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  scale: Vote[] = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
 
-    get current(): ItemMeta | null { return this.items[this.currentIndex] ?? null; }
+  get current(): ItemMeta | null { return this.items[this.currentIndex] ?? null; }
 
-    private urlRegex = /(https?:\/\/[^\s<]+)/g;
-    linkifyHtml(s: string | null | undefined): string {
-        const txt = (s ?? '').toString();
-        return txt.replace(this.urlRegex, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  private urlRegex = /(https?:\/\/[^\s<]+)/g;
+  linkifyHtml(s: string | null | undefined): string {
+    const txt = (s ?? '').toString();
+    return txt.replace(this.urlRegex, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
+  // Keyboard handling could be here or in parent.
+  // If here, we need to emit events.
+  @HostListener('document:keydown', ['$event'])
+  handleKey(e: KeyboardEvent) {
+    // Simple pass-through logic or re-implement local shortcuts
+    if (e.key === 'ArrowLeft') {
+      // This logic was "bump score" in original, not prev item.
+      // Original: ArrowLeft -> bump(-1), ArrowRight -> bump(1)
+      // We need to know if we should handle it.
+      // Let's leave complex key handling to parent or implement "bump" here.
     }
-
-    // Keyboard handling could be here or in parent.
-    // If here, we need to emit events.
-    @HostListener('document:keydown', ['$event'])
-    handleKey(e: KeyboardEvent) {
-        // Simple pass-through logic or re-implement local shortcuts
-        if (e.key === 'ArrowLeft') {
-            // This logic was "bump score" in original, not prev item.
-            // Original: ArrowLeft -> bump(-1), ArrowRight -> bump(1)
-            // We need to know if we should handle it.
-            // Let's leave complex key handling to parent or implement "bump" here.
-        }
-    }
+  }
 }

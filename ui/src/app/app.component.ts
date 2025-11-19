@@ -38,9 +38,9 @@ import { NicknameComponent } from './nickname/nickname.component';
       <!-- Show Results Button (Top Right) -->
       <button 
         *ngIf="!showResults" 
-        class="btn btn-primary position-fixed top-0 end-0 m-3 fs-4 px-4 py-2" 
+        class="btn btn-primary position-fixed end-0 m-3 fs-4 px-4 py-2" 
         (click)="loadResults()"
-        style="z-index: 1000;">
+        style="z-index: 1000; top: 80px;">
         <i class="bi bi-trophy me-2"></i>Näytä tulokset
       </button>
 
