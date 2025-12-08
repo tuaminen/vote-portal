@@ -13,30 +13,34 @@ post() {
     -F "image=@$2"
 }
 
-post 'Save file -visiitti https://www.savefile.fi' 'savefile.jpg'
-post 'Ruutisavu https://ruutisavu.fi' 'ruutisavu.jpg'
-post 'Hervanta tour (ratikalla Hervantaan, Kultainen apina jne.)' 'herwood.jpg'
 post 'Lautapeli at toimisto/Lategame/Taverna' 'lautapeli.jpg'
 post 'Potkunyrkeily / BJJ lajikokeilu TJKK:lla https://tjjk.fi/tilauskurssit/' 'kickboxing.jpg'
 post 'Pispala tour (Pulteri, Vastavirta, Kujakolli)' 'pispala.jpg'
 post 'ZBase (arcade, baaritiski) https://zbase.fi/tampere/' 'zbase.jpg'
-post 'Biljardi https://www.galaxie.fi/tampere' 'biljardi.jpg'
 
 # post 'Counter Strike' 'counterstrike.jpg'
 post 'Ikuri Arcade https://www.ikuriarcade.com/' 'ikuriarcade.jpg'
 post 'Pinball Union https://pinballunion.fi/' 'pinball_union.jpg'
 post 'Retrokellari https://koneet.net' 'retrokellari.jpg'
-post 'Pubivisailua https://pubivisat.fi/tampere' 'pub_quiz.jpg'
-post 'Pubikierros (Kahdet kasvot,Ohranjyvä,..)' 'pubcrawl.jpg'
-post 'Tampere Hacklab https://tampere.hacklab.fi/' 'hacklab.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
-post 'Pizzaa Napolissa https://www.pizzerianapoli.fi' 'napoli.jpg'
 post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
 #post 'Sivuluisua https://www.icerange.fi/' 'icerange.jpg'
 
 # Past events
+# post 'Biljardi https://www.galaxie.fi/tampere' 'biljardi.jpg'
 # post 'Karting https://kic.fi/tampere/' 'karting.jpg'
-#post 'Space Bowling https://www.spacebowling.fi/tampere/' 'bowling.jpg'
+# post 'Space Bowling https://www.spacebowling.fi/tampere/' 'bowling.jpg'
+
+
+# Somewhat unpopular events
+#post 'Tampere Hacklab https://tampere.hacklab.fi/' 'hacklab.jpg'
+#post 'Save file -visiitti https://www.savefile.fi' 'savefile.jpg'
+#post 'Pubivisailua https://pubivisat.fi/tampere' 'pub_quiz.jpg'
+#post 'Pizzaa Napolissa https://www.pizzerianapoli.fi' 'napoli.jpg'
+#post 'Ruutisavu https://ruutisavu.fi' 'ruutisavu.jpg'
+#post 'Hervanta tour (ratikalla Hervantaan, Kultainen apina jne.)' 'herwood.jpg'
+#post 'Pubikierros (Kahdet kasvot,Ohranjyvä,..)' 'pubcrawl.jpg'
+
 
 # Very unpopular events
 #post 'Karaoke' 'karaoke.jpg'
