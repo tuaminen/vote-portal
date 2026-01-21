@@ -24,7 +24,7 @@ post 'Pinball Union https://pinballunion.fi/' 'pinball_union.jpg'
 post 'Retrokellari https://koneet.net' 'retrokellari.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
 post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
-#post 'Sivuluisua https://www.icerange.fi/' 'icerange.jpg'
+post 'Sivuluisua https://www.icerange.fi/' 'icerange.jpg'
 
 # Past events
 # post 'Biljardi https://www.galaxie.fi/tampere' 'biljardi.jpg'

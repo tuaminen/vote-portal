@@ -1,12 +1,23 @@
-# VotePortal
+# Overview
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.9.
+Made for voting.
 
-## Development server
 
-To start a local development server, run:
+# Development server
+
+To start a local development server, run in one console:
+
 
 ```bash
+cd backend
+./run.sh
+```
+
+and start UI in another:
+
+```bash
+cd ui
+npm install
 ng serve
 ```
 

@@ -5,17 +5,70 @@
 ### Configure event title (i.e. the date)
 * modify ```TOPIC_TITLE``` at ```backend/docker-compose.yml``` 
 
-### Start backend
-* Start backend: ```cd backend; ./start.sh```
-
 ### Configure voting items
 * Modify voting items at ```data/upload_items.sh```
 * Generate PNG images for new items using AI or such
-* Generate JPGs from PNG by running ```./create_jpgs.sh```
-* Once backend is up, upload items to database using ```upload_items.sh```
+* Generate JPGs from PNG by running ```cd data; ./create_jpgs.sh```
+* Commit new items to git
 
-### Configure UI
-* Configure backend address to API_BASE in file  ```ui/src/app/app.component.ts ```
+### Testing (OPTIONAL): Run backend
+* Start backend: ```cd backend; ./start.sh```
 
-### Start UI
+### Testing (OPTIONAL): Install data
+* Once backend is up, upload items to database using ```cd data; upload_items.sh```
+
+### Testing (OPTIONAL): Start UI
 * Start backend: ```cd ui; ./start.sh```
+
+### Deploy to cloud
+
+* We need to use ```https://console.cloud.google.com/compute/instancesDetail/zones/europe-north1-c/instances/vote-portal?project=macro-crane-801```
+
+* Start it:
+  ```
+  gcloud compute instances start vote-portal \
+    --project=macro-crane-801 \
+    --zone=europe-north1-c
+  ```
+
+* Check the ephemeral IP:
+  ```
+  gcloud compute instances describe vote-portal \
+  --project=macro-crane-801 \
+  --zone=europe-north1-c \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+  ```
+
+* Configure it to backend address as API_BASE in file  ```ui/src/app/app.component.ts ```
+
+* Commit and push changes to Git:
+  ```
+  git add .
+  git commit -m "Vote settings xx.xx.xxxx"
+  git push
+  ```
+
+* Open SSH to VM:
+  ```
+  * gcloud compute ssh  vote-portal --project=macro-crane-801 --zone=europe-north1-c
+    ```
+
+* Update vote-portal repo
+  ```
+  cd vote-portal
+  git stash
+  git pull
+  ```
+
+* Start portal
+  ```
+  cd backend
+  ./start.sh
+  ```
+
+  ```
+  cd ui
+  ./start.sh
+  ```
+
+

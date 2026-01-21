@@ -12,7 +12,7 @@ export interface ResultItem { item_id: number; voters: number; score: number; av
 export interface VoteDistribution { item_id: number; distribution: Record<number, number>; }
 
 
-export const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
+export const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.242.237:8080';
 
 @Injectable({
   providedIn: 'root'
