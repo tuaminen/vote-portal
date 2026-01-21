@@ -1,13 +1,18 @@
 #ng serve
 export DOCKER_BUILDKIT=0
 
-docker-compose down --remove-orphans
+if docker compose version >/dev/null 2>&1; then
+  COMPOSE="docker compose"
+else
+  COMPOSE="docker-compose"
+fi
 
-docker-compose build --no-cache
+$COMPOSE down --remove-orphans
 
-#docker-compose up -d
-docker-compose up
+$COMPOSE build --no-cache
+
+#$COMPOSE up -d
+$COMPOSE up
 
 # API: http://localhost:8080
-
 
