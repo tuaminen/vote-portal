@@ -60,15 +60,26 @@
   git pull
   ```
 
-* Start portal
+* Start backend
   ```
   cd backend
+  <modify start.sh by using "COMPOSE up -d" row>
   ./start.sh
   ```
 
+* Upload data
+```
+  cd data
+  ./upl.sh
+  ```
+
+* Start UI
   ```
   cd ui
+  <modify start.sh by using "COMPOSE up -d" row>
   ./start.sh
+  press CTRL-Z, bg
   ```
 
-
+* Test by opening browser to 
+http://<ephemeral_ip>:8081/
