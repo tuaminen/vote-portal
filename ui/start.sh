@@ -11,5 +11,8 @@ $COMPOSE down --remove-orphans
 
 $COMPOSE build --no-cache
 
-#$COMPOSE up -d
-$COMPOSE up
+if [ "${DETACH:-0}" = "1" ]; then
+  $COMPOSE up -d
+else
+  $COMPOSE up
+fi
