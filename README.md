@@ -2,6 +2,11 @@
 
 ## Configuration
 
+### Make sure UI uses backend at localhost
+
+* Open ```ui/src/app/vote.service.ts```, and make sure that API_BASE is set to localhost like this:
+  ```export const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';```
+
 ### Configure event title (i.e. the date)
 * modify ```TOPIC_TITLE``` at ```backend/docker-compose.yml``` 
 
@@ -12,13 +17,13 @@
 * Commit new items to git
 
 ### Testing (OPTIONAL): Run backend
-* Start backend: ```cd backend; ./start.sh```
+* Run ```cd backend; ./start.sh```
 
 ### Testing (OPTIONAL): Install data
 * Once backend is up, upload items to database using ```cd data; upload_items.sh```
 
 ### Testing (OPTIONAL): Start UI
-* Start backend: ```cd ui; ./start.sh```
+* Run ```cd ui; ./start.sh```
 
 ### Deploy to cloud
 
@@ -26,20 +31,17 @@
 
 * Start it:
   ```
-  gcloud compute instances start vote-portal \
-    --project=macro-crane-801 \
-    --zone=europe-north1-c
+  gcloud compute instances start vote-portal --project=macro-crane-801 --zone=europe-north1-c
   ```
 
 * Check the ephemeral IP:
   ```
-  gcloud compute instances describe vote-portal \
-  --project=macro-crane-801 \
-  --zone=europe-north1-c \
-  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+  export VOTE_IP=$(gcloud compute instances describe vote-portal --project=macro-crane-801 --zone=europe-north1-c --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
   ```
 
-* Configure it to backend address as API_BASE in file  ```ui/src/app/app.component.ts ```
+* Configure it to backend address as API_BASE in file  ```ui/src/app/vote.service.ts```
+  ```sed -i "s/localhost/${VOTE_IP}/g" ui/src/app/vote.service.ts```
+
 
 * Commit and push changes to Git:
   ```

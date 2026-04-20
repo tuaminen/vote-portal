@@ -20,15 +20,15 @@ import { NicknameComponent } from './nickname/nickname.component';
   ],
   template: `
     <!-- Nickname overlay - shown when no nickname is set -->
-    <app-nickname 
-      *ngIf="nicknameEditing" 
+    <app-nickname
+      *ngIf="nicknameEditing"
       [nickname]="nickname"
       (nicknameSaved)="saveNickname($event)">
     </app-nickname>
 
     <!-- Landing page -->
-    <app-landing 
-      *ngIf="showLanding" 
+    <app-landing
+      *ngIf="showLanding"
       [title]="landingTitle"
       (start)="startVoting()">
     </app-landing>
@@ -36,9 +36,9 @@ import { NicknameComponent } from './nickname/nickname.component';
     <!-- Voting interface -->
     <div *ngIf="!showLanding" class="crt min-vh-100 d-flex flex-column align-items-center justify-content-center text-light position-relative">
       <!-- Show Results Button (Top Right) -->
-      <button 
-        *ngIf="!showResults" 
-        class="btn btn-primary position-fixed end-0 m-3 fs-4 px-4 py-2" 
+      <button
+        *ngIf="!showResults"
+        class="btn btn-primary position-fixed end-0 m-3 fs-4 px-4 py-2"
         (click)="loadResults()"
         style="z-index: 1000; top: 80px;">
         <i class="bi bi-trophy me-2"></i>Näytä tulokset
@@ -56,7 +56,7 @@ import { NicknameComponent } from './nickname/nickname.component';
       </div>
 
       <!-- Voting Card -->
-      <app-voting 
+      <app-voting
         *ngIf="!finished && !loading && !error && !showResults"
         [items]="items"
         [currentIndex]="currentIndex"
@@ -85,7 +85,7 @@ import { NicknameComponent } from './nickname/nickname.component';
       </div>
 
       <!-- Results page -->
-      <app-results 
+      <app-results
         *ngIf="showResults && !loading && !error"
         [results]="results"
         [items]="items"
@@ -127,7 +127,7 @@ export class AppComponent implements OnInit {
   getTopic() {
     this.voteService.getTopic().subscribe({
       next: title => this.landingTitle = title,
-      error: () => this.landingTitle = 'TestiOtsikko 24.10.2025'
+      error: () => this.landingTitle = 'DEFAULT TITLE'
     });
   }
 

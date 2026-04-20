@@ -18,7 +18,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/votes
       - SQL_ECHO=0
-      - TOPIC_TITLE=Aktiviteettipäivä 05.02.2026
+      - TOPIC_TITLE=Aktiviteettipäivä 07.05.2026
     depends_on:
       db:
         condition: service_healthy

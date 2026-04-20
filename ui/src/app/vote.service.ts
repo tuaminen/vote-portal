@@ -12,7 +12,7 @@ export interface ResultItem { item_id: number; voters: number; score: number; av
 export interface VoteDistribution { item_id: number; distribution: Record<number, number>; }
 
 
-export const API_BASE = localStorage.getItem('API_BASE') || 'http://34.88.242.237:8080';
+export const API_BASE = localStorage.getItem('API_BASE') || 'http://35.228.100.113:8080';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class VoteService {
   getTopic(): Observable<string> {
     return this.http.get<{ title: string }>(`${API_BASE}/topic`).pipe(
       map(t => t.title),
-      catchError(() => of('TestiOtsikko 24.10.2025'))
+      catchError(() => of('TITLE NOT SET'))
     );
   }
 

@@ -21,15 +21,18 @@ post 'ZBase (arcade, baaritiski) https://zbase.fi/tampere/' 'zbase.jpg'
 # post 'Counter Strike' 'counterstrike.jpg'
 post 'Ikuri Arcade https://www.ikuriarcade.com/' 'ikuriarcade.jpg'
 post 'Pinball Union https://pinballunion.fi/' 'pinball_union.jpg'
-post 'Retrokellari https://koneet.net' 'retrokellari.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
 post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
-post 'Sivuluisua https://www.icerange.fi/' 'icerange.jpg'
 
 # Past events
 # post 'Biljardi https://www.galaxie.fi/tampere' 'biljardi.jpg'
 # post 'Karting https://kic.fi/tampere/' 'karting.jpg'
 # post 'Space Bowling https://www.spacebowling.fi/tampere/' 'bowling.jpg'
+# post 'Retrokellari https://koneet.net' 'retrokellari.jpg'
+
+# Seasonal events
+#post 'Sivuluisua https://www.icerange.fi/' 'icerange.jpg'
+
 
 
 # Somewhat unpopular events
