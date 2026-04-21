@@ -24,6 +24,10 @@ post 'Pinball Union https://pinballunion.fi/' 'pinball_union.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
 post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
 
+post 'Finlayson Roof Walk https://roofwalk.fi/' 'roofwalk.jpg'
+post 'Auto Cruising' 'cruising.jpg'
+post 'Hohtogolf https://www.hohtogolf.fi/' 'hohtogolf.jpg'
+
 # Past events
 # post 'Biljardi https://www.galaxie.fi/tampere' 'biljardi.jpg'
 # post 'Karting https://kic.fi/tampere/' 'karting.jpg'
