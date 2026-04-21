@@ -6,8 +6,9 @@ HOST="http://localhost:8080"
 # Delete all (ignore error if none exist)
 curl -fsS -X DELETE "$HOST/items" || true
 
+# usage: post "description text" image.jpg
 post() {
-  # usage: post "description text" image.jpg
+  echo "Posting: $1 with image $2 ..."
   curl -fsS -X POST "$HOST/items" \
     --form-string "description=$1" \
     -F "image=@$2"
@@ -24,7 +25,7 @@ post 'Pinball Union https://pinballunion.fi/' 'pinball_union.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
 post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
 
-post 'Finlayson Roof Walk https://roofwalk.fi/' 'roofwalk.jpg'
+post 'Finlayson Roof Walk https://roofwalk.fi/' 'rooftop.jpg'
 post 'Auto Cruising' 'cruising.jpg'
 post 'Hohtogolf https://www.hohtogolf.fi/' 'hohtogolf.jpg'
 
