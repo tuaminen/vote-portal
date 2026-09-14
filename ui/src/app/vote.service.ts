@@ -13,6 +13,7 @@ export interface VoteDistribution { item_id: number; distribution: Record<number
 
 
 export const API_BASE = localStorage.getItem('API_BASE') || 'http://35.228.100.113:8080';
+//export const API_BASE = localStorage.getItem('API_BASE') || 'http://localhost:8080';
 
 @Injectable({
   providedIn: 'root'

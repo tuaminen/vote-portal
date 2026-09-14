@@ -14,7 +14,6 @@
 * Modify voting items at ```data/upload_items.sh```
 * Generate PNG images for new items using AI or such
 * Generate JPGs from PNG by running ```cd data; ./create_jpgs.sh```
-* Commit new items to git
 
 ### OPTIONAL: Testing: Run backend
 * Run ```cd backend; ./start.sh```
@@ -25,8 +24,18 @@
 ### OPTIONAL: Testing: Start UI
 * Run ```cd ui; ./start.sh```
 
-### Deploy to cloud
+### Start vote-portal VM 
 * Note: you need Google cloud access to project=macro-crane-801 and vote-portal VM
+* Open Vote portal at Google Cloud: https://console.cloud.google.com/compute/instancesDetail/zones/europe-north1-c/instances/vote-portal?project=macro-crane-801
+* Start it
+* Check its ephemeral IP, and put it to ``ui/src/app/vote.service.ts`` API_BASE
+
+### Commit new items to git
+* Commit changes, including the ephemeral IP change
+
+
+### Deploy to cloud
+* connect to vote-portal via SSH from office IP: ```gcloud compute ssh --zone "europe-north1-c" "vote-portal" --project "macro-crane-801"```
 * Run ```./deploy.sh```
 
 ### Testing

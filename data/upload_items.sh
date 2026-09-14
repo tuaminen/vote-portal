@@ -23,13 +23,16 @@ post 'ZBase (arcade, baaritiski) https://zbase.fi/tampere/' 'zbase.jpg'
 post 'Ikuri Arcade https://www.ikuriarcade.com/' 'ikuriarcade.jpg'
 post 'Pinball Union https://pinballunion.fi/' 'pinball_union.jpg'
 post 'LANit / peli-ilta toimistolla' 'gaming.jpg'
-post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
 
 post 'Finlayson Roof Walk https://roofwalk.fi/' 'rooftop.jpg'
-post 'Auto Cruising' 'cruising.jpg'
 post 'Hohtogolf https://www.hohtogolf.fi/' 'hohtogolf.jpg'
+post 'Tampereen iltarastit https://iltarastit.com/main/omatoimikortti_v2/25' 'iltarastit.jpg'
+post 'Ruutisavu https://ruutisavu.fi' 'ruutisavu.jpg'
+post 'Dartsia http://flyersdarts.fi/' 'darts.jpg'
+post 'Save file -visiitti https://www.savefile.fi' 'savefile.jpg'
 
 # Past events
+#post 'Pereensaaren sauna https://pereensaarensauna.fi/' 'sauna.jpg'
 # post 'Biljardi https://www.galaxie.fi/tampere' 'biljardi.jpg'
 # post 'Karting https://kic.fi/tampere/' 'karting.jpg'
 # post 'Space Bowling https://www.spacebowling.fi/tampere/' 'bowling.jpg'
@@ -41,11 +44,10 @@ post 'Hohtogolf https://www.hohtogolf.fi/' 'hohtogolf.jpg'
 
 
 # Somewhat unpopular events
+#post 'Auto Cruising' 'cruising.jpg'
 #post 'Tampere Hacklab https://tampere.hacklab.fi/' 'hacklab.jpg'
-#post 'Save file -visiitti https://www.savefile.fi' 'savefile.jpg'
 #post 'Pubivisailua https://pubivisat.fi/tampere' 'pub_quiz.jpg'
 #post 'Pizzaa Napolissa https://www.pizzerianapoli.fi' 'napoli.jpg'
-#post 'Ruutisavu https://ruutisavu.fi' 'ruutisavu.jpg'
 #post 'Hervanta tour (ratikalla Hervantaan, Kultainen apina jne.)' 'herwood.jpg'
 #post 'Pubikierros (Kahdet kasvot,Ohranjyvä,..)' 'pubcrawl.jpg'
 
