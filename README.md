@@ -36,6 +36,10 @@
 
 ### Deploy to cloud
 * connect to vote-portal via SSH from office IP: ```gcloud compute ssh --zone "europe-north1-c" "vote-portal" --project "macro-crane-801"```
+* (this probably works from 'pt' user only,)
+
+* cd vote-portal
+* git pull
 * Run ```./deploy.sh```
 
 ### Testing
